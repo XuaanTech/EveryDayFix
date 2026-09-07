@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import FAQSection from '../../components/FAQSection.astro';
+import RelatedArticles from '../../components/RelatedArticles.astro';
+import ArticleDisclaimer from '../../components/ArticleDisclaimer.astro';
+import categories from '../../data/categories.json';
+
+export async function getStaticPaths() {
+  const articleModules = import.meta.glob('../../content/articles/**/*.mdx', { eager: true });
+
+  const paths = [];
+
+  for (const [path, mod] of Object.entries(articleModules)) {
+    const parts = path.split('/');
+    const categorySlug = parts[parts.length - 2];
+    const slug = parts[parts.length - 1].replace('.mdx', '');
+    const categoryData = categories.find(c => c.slug === categorySlug);
+
+    if (categoryData) {
+      paths.push({
+        params: { category: categorySlug, slug },
+        props: {
+          ...mod.frontmatter,
+          slug,
+          category: categorySlug,
+          categoryData,
+          Content: mod.default,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { title, description, category, categoryData, slug, date, updated, author, faqs, steps, Content } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const canonicalURL = `https://everydayfix.pages.dev/${category}/${slug}/`;
+
+// Find related articles (same category, different slug)
+const articleModules = import.meta.glob('../../content/articles/**/*.mdx', { eager: true });
+const relatedArticles = Object.entries(articleModules)
+  .filter(([path]) => path.includes(`/${category}/`) && !path.endsWith(`/${slug}.mdx`))
+  .slice(0, 3)
+  .map(([path, mod]) => {
+    const relatedSlug = path.split('/').pop()?.replace('.mdx', '') || '';
+    return {
+      title: mod.frontmatter.title,
+      category,
+      categoryName: categoryData.name,
+      slug: relatedSlug,
+    };
+  });
+
+// Article schema
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "url": canonicalURL,
+  "datePublished": date,
+  "dateModified": updated || date,
+  "author": {
+    "@type": "Organization",
+    "name": author || "EverydayFix Team",
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "EverydayFix",
+    "url": "https://everydayfix.pages.dev",
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL,
+  },
+};
+
+// HowTo schema (if steps are provided)
+const howToSchema = steps ? {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": title,
+  "description": description,
+  "step": steps.map((step: string, i: number) => ({
+    "@type": "HowToStep",
+    "position": i + 1,
+    "text": step,
+  })),
+} : null;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalURL={canonicalURL}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  {howToSchema && <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />}
+
+  <div class="container container--narrow">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: categoryData.name, href: `/${category}/` },
+      { label: title },
+    ]} />
+
+    <header class="article-header">
+      <div class="article-header__meta">
+        <span class={`badge badge--${category}`}>{categoryData.name}</span>
+        <time datetime={date}>{formattedDate}</time>
+      </div>
+    </header>
+
+    <article class="article-content">
+      <ArticleDisclaimer category={category} />
+      <Content />
+    </article>
+
+    {faqs && faqs.length > 0 && (
+      <FAQSection faqs={faqs} />
+    )}
+
+    <RelatedArticles articles={relatedArticles} />
+  </div>
+</BaseLayout>

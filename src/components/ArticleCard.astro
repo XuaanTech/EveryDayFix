@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  category: string;
+  categoryName: string;
+  slug: string;
+  date: string;
+  readingTime?: string;
+}
+
+const { title, description, category, categoryName, slug, date, readingTime = '5 min' } = Astro.props;
+
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class={`article-card article-card--${category}`}>
+  <div class="article-card__body">
+    <div class="article-card__category">
+      <span class={`badge badge--${category}`}>{categoryName}</span>
+    </div>
+    <h3 class="article-card__title">
+      <a href={`/${category}/${slug}/`}>{title}</a>
+    </h3>
+    <p class="article-card__excerpt">{description}</p>
+    <div class="article-card__meta">
+      <time datetime={date}>{formattedDate}</time>
+      <span>·</span>
+      <span>{readingTime} read</span>
+    </div>
+  </div>
+</article>

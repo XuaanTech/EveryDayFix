@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="About EverydayFix"
+  description="Learn about EverydayFix — a free resource providing simple solutions for everyday problems around your home, tech, kitchen, and daily life."
+>
+  <div class="static-page">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'About' },
+    ]} />
+
+    <h1>About EverydayFix</h1>
+
+    <p>
+      <strong>EverydayFix</strong> is a free online resource dedicated to providing simple, practical solutions for everyday problems.
+    </p>
+
+    <p>
+      We believe that most daily frustrations — from a stubborn stain to a slow WiFi connection — have straightforward fixes that anyone can apply. Our mission is to make those solutions easy to find and easy to follow.
+    </p>
+
+    <h2>What We Cover</h2>
+    <p>EverydayFix covers four main areas of everyday life:</p>
+    <ul>
+      <li><strong>Home & Living</strong> — Cleaning tips, organization hacks, small repairs, and home improvement.</li>
+      <li><strong>Tech & Internet</strong> — Computer troubleshooting, WiFi fixes, smartphone tips, and software solutions.</li>
+      <li><strong>Kitchen & Food</strong> — Cooking tips, food safety, kitchen cleaning, and ingredient guides.</li>
+      <li><strong>Everyday Life</strong> — General life hacks, useful tips, and solutions to common daily problems.</li>
+    </ul>
+
+    <h2>Our Approach</h2>
+    <p>
+      Every article on EverydayFix follows the same philosophy:
+    </p>
+    <ul>
+      <li><strong>Identify the problem</strong> — clearly explain what the issue is and why it happens.</li>
+      <li><strong>Provide the solution</strong> — give step-by-step instructions that are easy to follow.</li>
+      <li><strong>Offer extra tips</strong> — share additional advice to prevent the problem from happening again.</li>
+    </ul>
+
+    <h2>Who Is EverydayFix For?</h2>
+    <p>
+      EverydayFix is for anyone who wants quick, reliable answers to everyday problems. Whether you're a homeowner dealing with a leaky faucet, a student trying to speed up a slow laptop, or a cook wondering how to clean a burnt pan — you'll find practical help here.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Have a suggestion, question, or want to get in touch? Visit our <a href="/contact/">Contact page</a>.
+    </p>
+  </div>
+</BaseLayout>

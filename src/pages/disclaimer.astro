@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="Disclaimer"
+  description="EverydayFix disclaimer. Important information about the content on this website."
+>
+  <div class="static-page">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Disclaimer' },
+    ]} />
+
+    <h1>Disclaimer</h1>
+
+    <p><em>Last updated: September 2026</em></p>
+
+    <h2>Informational Purposes Only</h2>
+    <p>
+      The content on EverydayFix is provided for general informational and educational purposes only. It is not intended as professional advice and should not be relied upon as such.
+    </p>
+    <p>
+      While we strive to provide accurate and up-to-date information, we make no representations or warranties of any kind about the completeness, accuracy, reliability, or suitability of the information contained on this website.
+    </p>
+
+    <h2>No Professional Relationship</h2>
+    <p>
+      EverydayFix does not create a professional-client relationship between you and the website operator. The content on this site does not constitute professional advice in any field, including but not limited to:
+    </p>
+    <ul>
+      <li>Plumbing, electrical, or structural work</li>
+      <li>Medical, health, or dietary advice</li>
+      <li>Legal advice</li>
+      <li>Financial advice</li>
+      <li>Environmental remediation</li>
+    </ul>
+
+    <h2>DIY and Repair Content</h2>
+    <p>
+      Articles that describe do-it-yourself (DIY) repairs, maintenance, or home improvement projects are for general guidance only. These activities may involve risks including, but not limited to, personal injury, property damage, or electrical hazards.
+    </p>
+    <p>
+      Before undertaking any repair or maintenance project described on this site, you should:
+    </p>
+    <ul>
+      <li>Assess whether the task is within your skill level</li>
+      <li>Use appropriate personal protective equipment (PPE)</li>
+      <li>Follow all applicable safety guidelines and local building codes</li>
+      <li>Consider consulting a licensed professional, especially for plumbing, electrical, gas, or structural work</li>
+    </ul>
+
+    <h2>Health and Safety Content</h2>
+    <p>
+      Articles that discuss topics related to food safety, pest control, mold remediation, cleaning chemicals, or health-related matters are for general informational purposes only. This content is not a substitute for professional medical advice, diagnosis, or treatment.
+    </p>
+    <p>
+      When handling cleaning chemicals, pesticides, or other potentially hazardous substances, always follow the manufacturer's safety instructions, use appropriate protective equipment, and ensure adequate ventilation.
+    </p>
+
+    <h2>Limitation of Liability</h2>
+    <p>
+      To the fullest extent permitted by applicable law, EverydayFix and its operator shall not be liable for any loss, damage, or injury arising from:
+    </p>
+    <ul>
+      <li>Your use of or reliance on any information provided on this website</li>
+      <li>Any actions you take based on the content of this website</li>
+      <li>Any errors or omissions in the content</li>
+      <li>Any third-party content linked from this website</li>
+    </ul>
+    <p>
+      You are solely responsible for your own decisions and actions when applying any information from this website.
+    </p>
+
+    <h2>Third-Party Links</h2>
+    <p>
+      This website may contain links to third-party websites for your convenience. We do not endorse or assume responsibility for the content, privacy practices, or accuracy of any third-party websites.
+    </p>
+
+    <h2>Accuracy and Currency</h2>
+    <p>
+      While we aim to keep information current, the content on this site may not always reflect the most recent developments, product specifications, or regulatory changes. We recommend independently verifying any critical information before relying on it.
+    </p>
+
+    <h2>Changes to This Disclaimer</h2>
+    <p>
+      We may update this disclaimer from time to time. Any changes will be posted on this page with an updated date.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      If you have questions about this disclaimer, please see our <a href="/contact/">Contact</a> page.
+    </p>
+  </div>
+</BaseLayout>

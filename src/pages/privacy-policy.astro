@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="EverydayFix privacy policy. Learn how we handle your data and protect your privacy."
+>
+  <div class="static-page">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Privacy Policy' },
+    ]} />
+
+    <h1>Privacy Policy</h1>
+
+    <p><em>Last updated: September 2026</em></p>
+
+    <p>
+      This privacy policy explains how EverydayFix handles information when you visit our website.
+    </p>
+
+    <h2>What We Collect</h2>
+    <p>
+      EverydayFix is a static content website. We do not collect personal information through account creation, contact forms, newsletter signups, or analytics tools on this website.
+    </p>
+    <p>
+      Our website does not set cookies or use tracking scripts. However, our hosting provider (Cloudflare) may automatically collect standard web server logs such as IP addresses, browser type, request times, and referring URLs as part of their hosting infrastructure. This data is processed by Cloudflare for the purpose of delivering and securing our website.
+    </p>
+
+    <h2>Legal Basis for Processing</h2>
+    <p>
+      We process data on the basis of our legitimate interest in providing and securing this website. The server logs collected by Cloudflare are processed for the purposes of website delivery, security, and abuse prevention.
+    </p>
+
+    <h2>Data Retention</h2>
+    <p>
+      We do not retain personal data on our website. Server logs collected by Cloudflare are retained according to <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's data retention policy</a>.
+    </p>
+
+    <h2>Third-Party Services</h2>
+    <p>
+      Our website is hosted on Cloudflare Pages. Cloudflare may collect standard web server logs (IP addresses, browser information, request times) as part of their hosting infrastructure. Please refer to <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's Privacy Policy</a> for details on how they handle this data.
+    </p>
+    <p>
+      We do not use any other third-party services that process personal data on our behalf. There are no advertising networks, analytics providers, or social media plugins on this website.
+    </p>
+
+    <h2>International Data Transfers</h2>
+    <p>
+      Our website is hosted in the United States through Cloudflare's global network. If you access this website from the European Economic Area (EEA) or other regions with data transfer laws, please be aware that your information may be transferred to, stored, and processed in the United States or other countries where Cloudflare operates data centers. Cloudflare uses Standard Contractual Clauses and other appropriate safeguards for international data transfers.
+    </p>
+
+    <h2>Your Rights</h2>
+    <p>
+      Under applicable data protection laws (including the GDPR for European users and the CCPA/CPRA for California residents), you may have the following rights regarding your personal data:
+    </p>
+    <ul>
+      <li><strong>Right of Access</strong> — Request information about what personal data is processed about you.</li>
+      <li><strong>Right to Rectification</strong> — Request correction of inaccurate personal data.</li>
+      <li><strong>Right to Erasure</strong> — Request deletion of your personal data.</li>
+      <li><strong>Right to Data Portability</strong> — Request a copy of your personal data in a structured format.</li>
+      <li><strong>Right to Object</strong> — Object to the processing of your personal data.</li>
+      <li><strong>Right to Withdraw Consent</strong> — Where processing is based on consent, withdraw it at any time.</li>
+    </ul>
+    <p>
+      To exercise any of these rights, or if you have questions about how your data is processed, please contact us. Since we do not directly collect personal data, requests related to server logs should be directed to Cloudflare directly.
+    </p>
+
+    <h2>California Residents (CCPA/CPRA)</h2>
+    <p>
+      If you are a California resident, you have the right to:
+    </p>
+    <ul>
+      <li>Know what personal information is being collected about you.</li>
+      <li>Request deletion of your personal information.</li>
+      <li>Opt out of the sale of your personal information (we do not sell personal information).</li>
+      <li>Not be discriminated against for exercising your privacy rights.</li>
+    </ul>
+    <p>
+      We do not sell, share, or use personal information for cross-context behavioral advertising.
+    </p>
+
+    <h2>Content</h2>
+    <p>
+      All content on EverydayFix is created for informational purposes. While we strive for accuracy, we cannot guarantee that all information is always complete or current. Always use your own judgment when applying any tips or solutions from our articles. See our <a href="/disclaimer/">Disclaimer</a> for more details.
+    </p>
+
+    <h2>Children's Privacy</h2>
+    <p>
+      This website is not directed at children under the age of 13 (or applicable age in your jurisdiction). We do not knowingly collect personal information from children.
+    </p>
+
+    <h2>Changes to This Policy</h2>
+    <p>
+      We may update this privacy policy if we add services such as analytics or advertising. Any changes will be posted on this page with an updated date.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      If you have questions about this privacy policy, please see our <a href="/contact/">Contact</a> page.
+    </p>
+  </div>
+</BaseLayout>

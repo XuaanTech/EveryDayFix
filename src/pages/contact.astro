@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Information about EverydayFix and how to reach us."
+>
+  <div class="static-page">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Contact' },
+    ]} />
+
+    <h1>Contact</h1>
+
+    <p>
+      EverydayFix is an independent informational website. We create practical guides and solutions for everyday problems, written for a general audience.
+    </p>
+
+    <h2>About This Site</h2>
+    <p>
+      EverydayFix is not affiliated with any company, brand, or organization. The content on this site is created for informational purposes and is based on commonly available household knowledge and practical experience.
+    </p>
+
+    <h2>Contact Us</h2>
+    <p>
+      You can reach us at <a href="mailto:xuaninformatica@gmail.com">xuaninformatica@gmail.com</a>.
+    </p>
+    <p>
+      EverydayFix is still a new and growing project. Whether you have a suggestion, an idea for a new guide, or feedback about a specific article, we read every message.
+    </p>
+
+    <h2>Corrections</h2>
+    <p>
+      If you notice factual errors or outdated information in any article, email us at <a href="mailto:xuaninformatica@gmail.com">xuaninformatica@gmail.com</a> with the article name and the issue you found. We aim to keep our content accurate and up to date.
+    </p>
+  </div>
+</BaseLayout>

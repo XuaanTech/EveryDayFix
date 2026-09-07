@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import categories from '../data/categories.json';
+
+// Load all articles
+const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
+
+const articles = Object.entries(articleModules)
+  .map(([path, mod]) => {
+    const slug = path.split('/').pop()?.replace('.mdx', '') || '';
+    const category = path.includes('/home-living/') ? 'home-living'
+      : path.includes('/tech-internet/') ? 'tech-internet'
+      : path.includes('/kitchen-food/') ? 'kitchen-food'
+      : 'everyday-life';
+
+    const categoryData = categories.find(c => c.slug === category);
+
+    return {
+      ...mod.frontmatter,
+      slug,
+      category,
+      categoryName: categoryData?.name || category,
+    };
+  })
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+const featuredArticles = articles.filter(a => a.featured).slice(0, 4);
+const latestArticles = articles.slice(0, 9);
+
+// Schema.org WebSite
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "EverydayFix",
+  "url": "https://everydayfix.pages.dev",
+  "description": "Simple solutions for everyday problems. Practical tips, tricks, and guides.",
+};
+---
+
+<BaseLayout
+  title="EverydayFix"
+  description="Simple solutions for everyday problems. Practical tips, tricks, and guides for home, tech, kitchen, and daily life."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero__title">Simple Solutions for Everyday Problems</h1>
+      <p class="hero__subtitle">
+        Practical tips, tricks, and step-by-step guides to fix common issues in your home, tech, kitchen, and daily life.
+      </p>
+      <div class="hero__categories">
+        {categories.map(cat => (
+          <a href={`/${cat.slug}/`} class="hero__cat-link">
+            <span>{cat.icon}</span>
+            <span>{cat.name}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">Browse by Category</h2>
+        <p class="section__subtitle">Find solutions organized by topic</p>
+      </div>
+      <div class="category-grid">
+        {categories.map(cat => (
+          <a href={`/${cat.slug}/`} class="category-card">
+            <span class="category-card__icon">{cat.icon}</span>
+            <div class="category-card__info">
+              <h3 class="category-card__name">{cat.name}</h3>
+              <p class="category-card__desc">{cat.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Articles -->
+  <section class="featured-section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="featured-section__title">Featured Guides</h2>
+        <p class="featured-section__subtitle">Our most helpful solutions</p>
+      </div>
+      <div class="featured-grid">
+        {featuredArticles.map(article => (
+          <ArticleCard
+            title={article.title}
+            description={article.description}
+            category={article.category}
+            categoryName={article.categoryName}
+            slug={article.slug}
+            date={article.date}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Articles -->
+  <section class="section">
+    <div class="container">
+      <div class="section__header">
+        <h2 class="section__title">Latest Articles</h2>
+        <p class="section__subtitle">Fresh solutions and tips</p>
+      </div>
+      <div class="article-grid">
+        {latestArticles.map(article => (
+          <ArticleCard
+            title={article.title}
+            description={article.description}
+            category={article.category}
+            categoryName={article.categoryName}
+            slug={article.slug}
+            date={article.date}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
