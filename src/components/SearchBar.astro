@@ -1,16 +1,13 @@
 ---
 interface Props {
-  variant?: 'header' | 'hero';
   placeholder?: string;
 }
 
-const { variant = 'header', placeholder } = Astro.props;
-const inputPlaceholder = placeholder ?? (variant === 'hero'
-  ? 'Search for a guide… e.g. "mold", "wifi", "faucet"'
-  : 'Search articles…');
+const { placeholder } = Astro.props;
+const inputPlaceholder = placeholder ?? 'Search articles…';
 ---
 
-<div class={`search-bar ${variant === 'hero' ? 'search-bar--hero' : ''}`} data-search>
+<div class="search-bar" data-search>
   <svg class="search-bar__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <circle cx="11" cy="11" r="8"></circle>
     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -32,7 +29,7 @@ const inputPlaceholder = placeholder ?? (variant === 'hero'
 <script>
   /**
    * Client-side article search.
-   * Works on every .search-bar instance on the page (header + hero).
+   * Works on every .search-bar instance on the page (header).
    */
   const wrappers = Array.from(document.querySelectorAll('[data-search]'));
 

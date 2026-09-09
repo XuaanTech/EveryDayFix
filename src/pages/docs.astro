@@ -66,10 +66,8 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
     <h2 id="structure">3. Estructura de archivos</h2>
     <p>Estas son las ubicaciones de los archivos importantes:</p>
     <pre><code>everydayfix/
-├─ astro.config.mjs           # Configuración de Astro (URL, MDX, sitemap)
+├─ astro.config.mjs           # Configuración de Astro (URL, MDX, sitemap, índice de búsqueda)
 ├─ package.json               # Scripts npm y dependencias
-├─ scripts/
-│  └─ generate-search-index.js   # Genera el índice de búsqueda desde el frontmatter
 ├─ public/
 │  ├─ search-index.json       # Índice de búsqueda generado (se crea al hacer build)
 │  └─ favicon.svg / .ico      # Iconos del sitio
@@ -192,10 +190,11 @@ Párrafo introductorio…
       principal). Busca por títulos, descripciones, etiquetas y categorías de los artículos.
     </p>
     <ul>
-      <li><strong>Cómo funciona:</strong> durante el build, <code>scripts/generate-search-index.js</code> lee el
-        frontmatter de todos los artículos y escribe <code>public/search-index.json</code>. En tiempo de ejecución,
-        un script JS en <code>src/components/SearchBar.astro</code> descarga ese archivo y filtra los resultados
-        mientras escribes.</li>
+      <li><strong>Cómo funciona:</strong> durante el build, una integración definida en
+        <code>astro.config.mjs</code> lee el frontmatter de todos los artículos y escribe
+        <code>public/search-index.json</code> automáticamente (también se regenera al arrancar el servidor de
+        desarrollo). En tiempo de ejecución, un script JS en <code>src/components/SearchBar.astro</code> descarga
+        ese archivo y filtra los resultados mientras escribes.</li>
       <li><strong>No se envían resultados a ningún servidor</strong> — la búsqueda se realiza enteramente en el
         navegador del visitante.</li>
       <li><strong>La barra de búsqueda se oculta en las páginas legales</strong> (About, Contact, Disclaimer,
@@ -235,15 +234,16 @@ npm install
 npm run dev
 
 # Construir el sitio de producción en la carpeta dist/
-# (esto también regenera el índice de búsqueda antes)
+# (el índice de búsqueda se regenera automáticamente)
 npm run build
 
 # Previsualizar la build de producción localmente
 npm run preview
 </code></pre>
     <p>
-      El script <code>build</code> ejecuta <code>npm run build:index</code> (regenerando el índice de búsqueda) y
-      luego <code>astro build</code>. El sitio final se escribe en <code>dist/</code>.
+      El comando <code>npm run build</code> ejecuta <code>astro build</code> y escribe el sitio final en
+      <code>dist/</code>. El índice de búsqueda se regenera automáticamente como parte del build — sin pasos
+      adicionales que recordar.
     </p>
     <p>
       <strong>Despliegue:</strong> el sitio está alojado en Cloudflare Pages. Al enviar cambios al repositorio de
