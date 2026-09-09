@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import categories from '../data/categories.json';
+import { categoryFromPath, readingTimeFromFile } from '../lib/utils.js';
 
 // Load all articles
 const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
@@ -9,11 +10,7 @@ const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager:
 const articles = Object.entries(articleModules)
   .map(([path, mod]) => {
     const slug = path.split('/').pop()?.replace('.mdx', '') || '';
-    const category = path.includes('/home-living/') ? 'home-living'
-      : path.includes('/tech-internet/') ? 'tech-internet'
-      : path.includes('/kitchen-food/') ? 'kitchen-food'
-      : 'everyday-life';
-
+    const category = categoryFromPath(path);
     const categoryData = categories.find(c => c.slug === category);
 
     return {
@@ -21,6 +18,7 @@ const articles = Object.entries(articleModules)
       slug,
       category,
       categoryName: categoryData?.name || category,
+      readingTime: readingTimeFromFile(mod.file),
     };
   })
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -28,19 +26,28 @@ const articles = Object.entries(articleModules)
 const featuredArticles = articles.filter(a => a.featured).slice(0, 4);
 const latestArticles = articles.slice(0, 9);
 
-// Schema.org WebSite
+// Schema.org WebSite with SearchAction (sitelinks searchbox)
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "EverydayFix",
   "url": "https://everydayfix.pages.dev",
   "description": "Simple solutions for everyday problems. Practical tips, tricks, and guides.",
+  "inLanguage": "en",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://everydayfix.pages.dev/search?q={search_term_string}",
+    },
+    "query-input": "required name=search_term_string",
+  },
 };
 ---
 
 <BaseLayout
   title="EverydayFix"
-  description="Simple solutions for everyday problems. Practical tips, tricks, and guides for home, tech, kitchen, and daily life."
+  description="Simple solutions for everyday problems. Practical tips, tricks, and step-by-step guides for home, tech, kitchen, and daily life."
 >
   <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
@@ -53,7 +60,7 @@ const websiteSchema = {
       </p>
       <div class="hero__categories">
         {categories.map(cat => (
-          <a href={`/${cat.slug}/`} class="hero__cat-link">
+          <a href={`/${cat.slug}/`} class="hero__cat-link" data-astro-prefetch="hover">
             <span>{cat.icon}</span>
             <span>{cat.name}</span>
           </a>
@@ -71,7 +78,7 @@ const websiteSchema = {
       </div>
       <div class="category-grid">
         {categories.map(cat => (
-          <a href={`/${cat.slug}/`} class="category-card">
+          <a href={`/${cat.slug}/`} class="category-card" data-astro-prefetch="hover">
             <span class="category-card__icon">{cat.icon}</span>
             <div class="category-card__info">
               <h3 class="category-card__name">{cat.name}</h3>
@@ -99,6 +106,7 @@ const websiteSchema = {
             categoryName={article.categoryName}
             slug={article.slug}
             date={article.date}
+            readingTime={article.readingTime}
           />
         ))}
       </div>
@@ -121,6 +129,7 @@ const websiteSchema = {
             categoryName={article.categoryName}
             slug={article.slug}
             date={article.date}
+            readingTime={article.readingTime}
           />
         ))}
       </div>

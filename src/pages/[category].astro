@@ -3,69 +3,65 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import categories from '../data/categories.json';
+import { categoryFromPath, readingTimeFromFile } from '../lib/utils.js';
 
 export async function getStaticPaths() {
-  return categories.map(cat => ({
-    params: { category: cat.slug },
-    props: { category: cat },
-  }));
+  const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
+
+  return categories.map((cat) => {
+    const catArticles = Object.entries(articleModules)
+      .filter(([path]) => categoryFromPath(path) === cat.slug)
+      .map(([path, mod]) => {
+        const slug = path.split('/').pop()?.replace('.mdx', '') || '';
+        return {
+          ...mod.frontmatter,
+          slug,
+          category: cat.slug,
+          readingTime: readingTimeFromFile(mod.file),
+        };
+      })
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return {
+      params: { category: cat.slug },
+      props: {
+        category: cat,
+        articles: catArticles,
+      },
+    };
+  });
 }
 
-const { category } = Astro.props;
-
-// Load articles for this category
-const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
-
-const articles = Object.entries(articleModules)
-  .filter(([path]) => path.includes(`/${category.slug}/`))
-  .map(([path, mod]) => {
-    const slug = path.split('/').pop()?.replace('.mdx', '') || '';
-    return {
-      ...mod.frontmatter,
-      slug,
-      category: category.slug,
-      categoryName: category.name,
-    };
-  })
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-// CollectionPage schema
-const collectionSchema = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": category.name,
-  "description": category.description,
-  "url": `https://everydayfix.pages.dev/${category.slug}/`,
-};
+const { category, articles } = Astro.props;
 ---
 
 <BaseLayout
   title={category.name}
   description={category.description}
+  canonicalURL={`https://everydayfix.pages.dev/${category.slug}/`}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
-
   <div class="container">
     <Breadcrumbs items={[
       { label: 'Home', href: '/' },
       { label: category.name },
     ]} />
 
-    <section class="category-header">
-      <span class="category-header__icon">{category.icon}</span>
+    <div class="category-header">
+      <div class="category-header__icon">{category.icon}</div>
       <h1 class="category-header__title">{category.name}</h1>
       <p class="category-header__desc">{category.description}</p>
-    </section>
+    </div>
 
-    <div class="article-grid" style="padding-bottom: var(--space-16);">
-      {articles.map(article => (
+    <div class="article-grid">
+      {articles.map((article) => (
         <ArticleCard
           title={article.title}
           description={article.description}
           category={article.category}
-          categoryName={article.categoryName}
+          categoryName={category.name}
           slug={article.slug}
           date={article.date}
+          readingTime={article.readingTime}
         />
       ))}
     </div>

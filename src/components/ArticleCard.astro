@@ -1,21 +1,23 @@
 ---
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   category: string;
   categoryName: string;
   slug: string;
-  date: string;
+  date?: string;
   readingTime?: string;
 }
 
-const { title, description, category, categoryName, slug, date, readingTime = '5 min' } = Astro.props;
-
-const formattedDate = new Date(date).toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const {
+  title,
+  description,
+  category,
+  categoryName,
+  slug,
+  date,
+  readingTime = '',
+} = Astro.props;
 ---
 
 <article class={`article-card article-card--${category}`}>
@@ -24,13 +26,12 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
       <span class={`badge badge--${category}`}>{categoryName}</span>
     </div>
     <h3 class="article-card__title">
-      <a href={`/${category}/${slug}/`}>{title}</a>
+      <a href={`/${category}/${slug}/`} data-astro-prefetch="hover">{title}</a>
     </h3>
-    <p class="article-card__excerpt">{description}</p>
+    {description && <p class="article-card__excerpt">{description}</p>}
     <div class="article-card__meta">
-      <time datetime={date}>{formattedDate}</time>
-      <span>·</span>
-      <span>{readingTime} read</span>
+      {date && <time datetime={date}>{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</time>}
+      {readingTime && <span class="article-card__reading-time">{readingTime}</span>}
     </div>
   </div>
 </article>

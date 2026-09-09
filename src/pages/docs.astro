@@ -186,8 +186,8 @@ Párrafo introductorio…
 
     <h2 id="search">8. Función de búsqueda</h2>
     <p>
-      El sitio tiene una barra de búsqueda del lado del cliente en la cabecera (y una más grande en la página
-      principal). Busca por títulos, descripciones, etiquetas y categorías de los artículos.
+      El sitio tiene una barra de búsqueda del lado del cliente en la cabecera. Busca por títulos,
+      descripciones, etiquetas y categorías de los artículos.
     </p>
     <ul>
       <li><strong>Cómo funciona:</strong> durante el build, una integración definida en
@@ -212,13 +212,20 @@ Párrafo introductorio…
     <p>El sitio está optimizado para motores de búsqueda. Características principales:</p>
     <ul>
       <li><strong>Datos estructurados (JSON-LD)</strong> — los artículos generan los esquemas
-        <code>Article</code>, <code>HowTo</code> (desde el frontmatter <code>steps</code>), <code>FAQPage</code>
-        (desde el frontmatter <code>faqs</code>) y <code>BreadcrumbList</code>. La página principal emite un
-        esquema <code>WebSite</code>.</li>
-      <li><strong>Mapa del sitio</strong> — se genera automáticamente <code>sitemap-0.xml</code> con la integración
+        <code>Article</code> (con author Person y publisher Organization), <code>HowTo</code>
+        (desde el frontmatter <code>steps</code>), <code>FAQPage</code> (desde el frontmatter <code>faqs</code>)
+        y <code>BreadcrumbList</code>. La página principal emite un esquema <code>WebSite</code> con
+        <code>PotentialAction: SearchAction</code>. Hay un esquema <code>Organization</code> global en todas
+        las páginas.</li>
+      <li><strong>Feed RSS</strong> — <code>/rss.xml</code> genera automáticamente un feed RSS 2.0 con todos los
+        artículos, útil para agregadores, lectores RSS y la descubribilidad por crawlers de IA.</li>
+      <li><strong>Mapa del sitio</strong> — se genera automáticamente <code>sitemap-index.xml</code> con la integración
         de sitemap y se envía a los motores de búsqueda a través de <code>robots.txt</code>.</li>
       <li><strong>Meta etiquetas</strong> — cada página tiene <code>title</code>, <code>description</code>, URL
-        canónica, Open Graph y Twitter card.</li>
+        canónica, Open Graph y Twitter card, más <code>max-image-preview:large</code> para habilitar imágenes
+        grandes en resultados de búsqueda.</li>
+      <li><strong>Prefetch</strong> — los enlaces de navegación usan <code>data-astro-prefetch="hover"</code> para
+        precargar páginas al pasar el ratón por encima, mejorando la velocidad de navegación entre páginas.</li>
     </ul>
     <p>
       Añadir un <code>description</code>, <code>faqs</code> y <code>steps</code> precisos en el frontmatter de cada

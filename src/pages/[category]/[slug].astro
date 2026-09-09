@@ -5,6 +5,7 @@ import FAQSection from '../../components/FAQSection.astro';
 import RelatedArticles from '../../components/RelatedArticles.astro';
 import ArticleDisclaimer from '../../components/ArticleDisclaimer.astro';
 import categories from '../../data/categories.json';
+import { readingTimeFromFile, categoryFromPath } from '../../lib/utils.js';
 
 export async function getStaticPaths() {
   const articleModules = import.meta.glob('../../content/articles/**/*.mdx', { eager: true });
@@ -12,20 +13,20 @@ export async function getStaticPaths() {
   const paths = [];
 
   for (const [path, mod] of Object.entries(articleModules)) {
-    const parts = path.split('/');
-    const categorySlug = parts[parts.length - 2];
-    const slug = parts[parts.length - 1].replace('.mdx', '');
-    const categoryData = categories.find(c => c.slug === categorySlug);
+    const category = categoryFromPath(path);
+    const slug = path.split('/').pop()?.replace('.mdx', '') || '';
+    const categoryData = categories.find(c => c.slug === category);
 
     if (categoryData) {
       paths.push({
-        params: { category: categorySlug, slug },
+        params: { category, slug },
         props: {
           ...mod.frontmatter,
           slug,
-          category: categorySlug,
+          category,
           categoryData,
           Content: mod.default,
+          filePath: mod.file,
         },
       });
     }
@@ -34,7 +35,9 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { title, description, category, categoryData, slug, date, updated, author, faqs, steps, Content } = Astro.props;
+const { title, description, category, categoryData, slug, date, updated, author, faqs, steps, tags, Content, filePath } = Astro.props;
+const siteUrl = 'https://everydayfix.pages.dev';
+const canonicalURL = `${siteUrl}/${category}/${slug}/`;
 
 const formattedDate = new Date(date).toLocaleDateString('en-US', {
   year: 'numeric',
@@ -48,26 +51,53 @@ const formattedUpdated = updated ? new Date(updated).toLocaleDateString('en-US',
   day: 'numeric',
 }) : formattedDate;
 
-const reviewedDate = updated || date;
+// Real reading time computed from source content
+const readingTime = readingTimeFromFile(filePath);
 
-const canonicalURL = `https://everydayfix.pages.dev/${category}/${slug}/`;
-
-// Find related articles (same category, different slug)
+// Robust category detection + related article scoring
 const articleModules = import.meta.glob('../../content/articles/**/*.mdx', { eager: true });
-const relatedArticles = Object.entries(articleModules)
-  .filter(([path]) => path.includes(`/${category}/`) && !path.endsWith(`/${slug}.mdx`))
-  .slice(0, 3)
+
+interface RelatedCandidate {
+  title: string;
+  category: string;
+  categoryName: string;
+  slug: string;
+  tags: string[];
+  score: number;
+}
+
+const currentTags: string[] = Array.isArray(tags) ? tags : [];
+const currentWords = new Set(title.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3));
+
+const relatedArticles: RelatedCandidate[] = Object.entries(articleModules)
+  .filter(([path]) => categoryFromPath(path) === category && !path.endsWith(`/${slug}.mdx`))
   .map(([path, mod]) => {
     const relatedSlug = path.split('/').pop()?.replace('.mdx', '') || '';
+    const relatedTags: string[] = Array.isArray(mod.frontmatter.tags) ? mod.frontmatter.tags : [];
+
+    // Relevance scoring: shared tags (+3), shared title words (+2)
+    let score = 0;
+    for (const t of relatedTags) {
+      if (currentTags.includes(t)) score += 3;
+    }
+    const relatedWords = new Set((mod.frontmatter.title || '').toLowerCase().split(/\s+/).filter((w: string) => w.length > 3));
+    for (const w of relatedWords) {
+      if (currentWords.has(w)) score += 2;
+    }
+
     return {
-      title: mod.frontmatter.title,
+      title: mod.frontmatter.title || relatedSlug,
       category,
       categoryName: categoryData.name,
       slug: relatedSlug,
+      tags: relatedTags,
+      score,
     };
-  });
+  })
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 3);
 
-// Article schema
+// Article schema — author is Person, publisher is Organization
 const articleSchema = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -77,22 +107,22 @@ const articleSchema = {
   "datePublished": date,
   "dateModified": updated || date,
   "author": {
-    "@type": "Organization",
+    "@type": "Person",
+    "@id": `${siteUrl}/#author`,
     "name": author || "EverydayFix Team",
-  },
-  "reviewedBy": {
-    "@type": "Organization",
-    "name": "EverydayFix Editorial Team",
+    "url": `${siteUrl}/about/`,
   },
   "publisher": {
     "@type": "Organization",
+    "@id": `${siteUrl}/#organization`,
     "name": "EverydayFix",
-    "url": "https://everydayfix.pages.dev",
+    "url": siteUrl,
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": canonicalURL,
   },
+  "inLanguage": "en",
 };
 
 // HowTo schema (if steps are provided)
@@ -113,6 +143,7 @@ const howToSchema = steps ? {
   title={title}
   description={description}
   canonicalURL={canonicalURL}
+  ogType="article"
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {howToSchema && <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />}
@@ -128,6 +159,7 @@ const howToSchema = steps ? {
       <div class="article-header__meta">
         <span class={`badge badge--${category}`}>{categoryData.name}</span>
         <span class="article-header__author">By {author || 'EverydayFix Team'}</span>
+        <span class="article-header__reading-time">{readingTime}</span>
         <time datetime={date}>Published {formattedDate}</time>
         {updated && updated !== date && (
           <time datetime={updated}>Updated {formattedUpdated}</time>

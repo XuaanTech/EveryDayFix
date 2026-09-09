@@ -1,11 +1,33 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import categories from '../data/categories.json';
+import { categoryFromPath, readingTimeFromFile } from '../lib/utils.js';
+import SearchBar from '../components/SearchBar.astro';
+
+// Load latest articles as suggestions
+const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
+const suggestedArticles = Object.entries(articleModules)
+  .map(([path, mod]) => {
+    const slug = path.split('/').pop()?.replace('.mdx', '') || '';
+    const category = categoryFromPath(path);
+    const categoryData = categories.find(c => c.slug === category);
+    return {
+      ...mod.frontmatter,
+      slug,
+      category,
+      categoryName: categoryData?.name || category,
+      readingTime: readingTimeFromFile(mod.file),
+    };
+  })
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .slice(0, 4);
 ---
 
 <BaseLayout
   title="Page Not Found"
-  description="The page you're looking for doesn't exist."
+  description="The page you're looking for doesn't exist. Browse our latest guides or search for solutions to everyday problems."
 >
   <div class="static-page">
     <Breadcrumbs items={[
@@ -17,8 +39,49 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
     <p>
       Sorry, the page you're looking for doesn't exist or may have been moved.
     </p>
-    <p style="margin-top: 1.5rem;">
-      <a href="/" style="font-weight:600; color: var(--color-primary);">Go back to the homepage →</a>
+
+    <div style="margin-top: 2rem;">
+      <h2>Search for a guide</h2>
+      <p style="font-size: 0.95rem; color: var(--color-text-secondary); margin-bottom: 0.75rem;">Try searching for your topic — we have guides for common household problems, tech fixes, kitchen tips, and more.</p>
+      <SearchBar />
+    </div>
+
+    <div style="margin-top: 2.5rem;">
+      <h2>Browse by category</h2>
+      <div class="category-grid" style="margin-top: 1rem;">
+        {categories.map(cat => (
+          <a href={`/${cat.slug}/`} class="category-card" data-astro-prefetch="hover">
+            <span class="category-card__icon">{cat.icon}</span>
+            <div class="category-card__info">
+              <h3 class="category-card__name">{cat.name}</h3>
+              <p class="category-card__desc">{cat.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {suggestedArticles.length > 0 && (
+      <div style="margin-top: 3rem;">
+        <h2>Latest guides</h2>
+        <div class="article-grid" style="margin-top: 1rem;">
+          {suggestedArticles.map(article => (
+            <ArticleCard
+              title={article.title}
+              description={article.description}
+              category={article.category}
+              categoryName={article.categoryName}
+              slug={article.slug}
+              date={article.date}
+              readingTime={article.readingTime}
+            />
+          ))}
+        </div>
+      </div>
+    )}
+
+    <p style="margin-top: 2.5rem;">
+      <a href="/" style="font-weight:600; color: var(--color-primary);">← Go back to the homepage</a>
     </p>
   </div>
 </BaseLayout>

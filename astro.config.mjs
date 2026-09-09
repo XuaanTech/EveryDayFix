@@ -123,6 +123,7 @@ function searchIndex() {
 
 export default defineConfig({
   site: 'https://everydayfix.pages.dev',
+  prefetch: true,
   integrations: [
     mdx(),
     sitemap({
