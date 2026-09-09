@@ -137,6 +137,7 @@ const howToSchema = steps ? {
     "text": step,
   })),
 } : null;
+
 ---
 
 <BaseLayout
@@ -144,6 +145,10 @@ const howToSchema = steps ? {
   description={description}
   canonicalURL={canonicalURL}
   ogType="article"
+  articlePublishedTime={date}
+  articleModifiedTime={updated || date}
+  articleAuthor={author || 'EverydayFix Team'}
+  articleSection={categoryData.name}
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {howToSchema && <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />}

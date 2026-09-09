@@ -121,13 +121,44 @@ function searchIndex() {
   };
 }
 
+/**
+ * Map of article URL (pathname) -> last-modified date from frontmatter
+ * (`updated` if present, otherwise `date`). Used to stamp <lastmod> on the
+ * sitemap so crawlers know when each page changed, without recrawling
+ * everything on every pass.
+ */
+function buildLastmodMap() {
+  const files = collectMdx(ARTICLES_DIR);
+  const map = new Map();
+  for (const file of files) {
+    const raw = readFileSync(file, 'utf8');
+    const fm = parseFrontmatter(raw);
+    const rel = file.slice(ARTICLES_DIR.length + 1).replace(/\.mdx$/, '');
+    const [category, slug] = rel.split(/[\\/]/);
+    const lastmod = fm.updated || fm.date || '';
+    if (lastmod) {
+      map.set(`/${category}/${slug}/`, lastmod);
+    }
+  }
+  return map;
+}
+
+const lastmodMap = buildLastmodMap();
+
 export default defineConfig({
   site: 'https://everydayfix.pages.dev',
+  trailingSlash: 'always',
   prefetch: true,
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/404'),
+      filter: (page) => !page.includes('/404') && !page.includes('/search'),
+      serialize(item) {
+        const pathname = new URL(item.url).pathname;
+        const lastmod = lastmodMap.get(pathname);
+        if (lastmod) item.lastmod = lastmod;
+        return item;
+      },
     }),
     searchIndex(),
   ],

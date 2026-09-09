@@ -1,0 +1,148 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="Search"
+  description="Search EverydayFix for practical guides, tips, and solutions for everyday problems."
+  noindex={true}
+>
+  <div class="container container--narrow static-page">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Search' },
+    ]} />
+
+    <h1>Search</h1>
+    <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-6);">
+      Find a guide by keyword — we have practical solutions for home, tech, kitchen, and everyday life.
+    </p>
+
+    <div class="search-bar search-bar--page">
+      <svg class="search-bar__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="search"
+        class="search-bar__input"
+        placeholder="Search articles…"
+        aria-label="Search articles"
+        autocomplete="off"
+        data-search-page-input
+      />
+    </div>
+
+    <div class="search-page__results" data-search-page-results aria-live="polite">
+      <p class="search-page__hint">Type a keyword to search.</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // ── client-side search (reuses scoring from SearchBar) ──
+
+  const input = document.querySelector('[data-search-page-input]') as HTMLInputElement | null;
+  const resultsEl = document.querySelector('[data-search-page-results]');
+  if (!input || !resultsEl) throw new Error('search.astro: elements not found');
+
+  let index: any[] | null = null;
+  const MAX_RESULTS = 50;
+
+  async function loadIndex() {
+    if (index) return index;
+    try {
+      const res = await fetch('/search-index.json');
+      if (!res.ok) return [];
+      index = await res.json();
+    } catch {
+      index = [];
+    }
+    return index;
+  }
+
+  function score(article: any, words: string[]) {
+    let s = 0;
+    for (const w of words) {
+      if (!w) continue;
+      if (article.title.toLowerCase().includes(w)) s += 3;
+      else if (article.text.includes(w)) s += 1;
+    }
+    return s;
+  }
+
+  function runSearch(query: string, articles: any[]) {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    const words = q.split(/\s+/).filter(Boolean);
+    return articles
+      .map((a: any) => ({ a, s: score(a, words) }))
+      .filter((r: any) => r.s > 0)
+      .sort((x: any, y: any) => y.s - x.s)
+      .slice(0, MAX_RESULTS)
+      .map((r: any) => r.a);
+  }
+
+  function escapeHtml(str: string) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function renderResults(articles: any[], query: string) {
+    if (!query.trim()) {
+      resultsEl!.innerHTML = '<p class="search-page__hint">Type a keyword to search.</p>';
+      return;
+    }
+    if (!articles.length) {
+      resultsEl!.innerHTML = `<p class="search-page__empty">No results found for <strong>${escapeHtml(query)}</strong>. Try different keywords.</p>`;
+      return;
+    }
+    const count = articles.length;
+    resultsEl!.innerHTML = `
+      <p class="search-page__count">${count} result${count !== 1 ? 's' : ''} for <strong>${escapeHtml(query)}</strong></p>
+      <div class="search-page__list">
+        ${articles.map((a: any) => `
+          <a class="search-page__card" href="${escapeHtml(a.url)}" data-astro-prefetch="hover">
+            <span class="search-page__card-category">${escapeHtml(a.categoryName || a.category)}</span>
+            <h3 class="search-page__card-title">${escapeHtml(a.title)}</h3>
+            <p class="search-page__card-desc">${escapeHtml(a.description)}</p>
+          </a>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function updateUrl(query: string) {
+    const url = new URL(location.href);
+    if (query.trim()) url.searchParams.set('q', query.trim());
+    else url.searchParams.delete('q');
+    history.replaceState(null, '', url.toString());
+  }
+
+  let debounceTimer: ReturnType<typeof setTimeout>;
+
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(async () => {
+      const q = input.value;
+      updateUrl(q);
+      const articles = await loadIndex();
+      renderResults(runSearch(q, articles), q);
+    }, 200);
+  });
+
+  // Prefill from ?q= on page load
+  const params = new URLSearchParams(location.search);
+  const initial = params.get('q') || '';
+  if (initial) {
+    input.value = initial;
+    (async () => {
+      const articles = await loadIndex();
+      renderResults(runSearch(initial, articles), initial);
+    })();
+  }
+</script>
