@@ -1,9 +1,12 @@
 ---
+import SearchBar from '../components/SearchBar.astro';
+
 interface Props {
   title: string;
   description: string;
   canonicalURL?: string;
   ogImage?: string;
+  showSearch?: boolean;
 }
 
 const {
@@ -11,6 +14,7 @@ const {
   description,
   canonicalURL = Astro.url.href,
   ogImage = 'https://everydayfix.pages.dev/og-default.png',
+  showSearch = true,
 } = Astro.props;
 
 const siteName = 'EverydayFix';
@@ -94,6 +98,11 @@ const navLinks = [
         })}
       </nav>
     </div>
+    {showSearch && (
+      <div class="container header__search">
+        <SearchBar />
+      </div>
+    )}
   </header>
 
   <main>
@@ -123,6 +132,7 @@ const navLinks = [
           <div class="footer__links">
             <a href="/about/" class="footer__link">About Us</a>
             <a href="/contact/" class="footer__link">Contact</a>
+            <a href="/docs/" class="footer__link">Documentation</a>
             <a href="mailto:xuaninformatica@gmail.com" class="footer__link">xuaninformatica@gmail.com</a>
           </div>
         </div>

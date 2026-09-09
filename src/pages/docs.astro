@@ -1,0 +1,271 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="Documentación"
+  description="Documentación de EverydayFix — cómo funciona el sitio, cómo hacer cambios, estilos, despliegue y más."
+  showSearch={false}
+>
+  <div class="static-page docs">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Documentación' },
+    ]} />
+
+    <h1>Documentación</h1>
+    <p class="docs__lead">
+      Esta página explica cómo funciona EverydayFix y cómo hacer cambios — desde añadir un artículo nuevo hasta
+      desplegar el sitio. Está escrita para cualquiera que necesite mantener o ampliar la web.
+    </p>
+
+    <nav class="docs__toc">
+      <strong>Contenido</strong>
+      <ol>
+        <li><a href="#overview">Resumen del proyecto</a></li>
+        <li><a href="#stack">Tecnologías utilizadas</a></li>
+        <li><a href="#structure">Estructura de archivos</a></li>
+        <li><a href="#add-article">Cómo añadir un artículo</a></li>
+        <li><a href="#edit-article">Cómo editar un artículo</a></li>
+        <li><a href="#add-category">Cómo añadir una categoría</a></li>
+        <li><a href="#styling">Estilos del sitio</a></li>
+        <li><a href="#search">Función de búsqueda</a></li>
+        <li><a href="#seo">SEO y datos estructurados</a></li>
+        <li><a href="#deploy">Build y despliegue</a></li>
+        <li><a href="#troubleshooting">Solución de problemas</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="overview">1. Resumen del proyecto</h2>
+    <p>
+      EverydayFix es un sitio web de contenido estático que publica guías prácticas con instrucciones paso a paso
+      para resolver problemas cotidianos. El contenido está organizado en cuatro categorías:
+      <strong>Home &amp; Living</strong> (Hogar), <strong>Tech &amp; Internet</strong> (Tecnología),
+      <strong>Kitchen &amp; Food</strong> (Cocina) y <strong>Everyday Life</strong> (Vida diaria).
+    </p>
+    <p>
+      El sitio funciona como un sitio estático: cada página se genera previamente durante el build en HTML, CSS y
+      una pequeña cantidad de JavaScript. No hay base de datos, sistema de inicio de sesión ni código del lado
+      del servidor. Esto lo hace rápido, seguro y gratuito de alojar.
+    </p>
+
+    <h2 id="stack">2. Tecnologías utilizadas</h2>
+    <ul>
+      <li><strong>Astro</strong> — el generador de sitio estático que construye el HTML.</li>
+      <li><strong>MDX</strong> — los artículos se escriben como archivos Markdown con estructura extra (frontmatter).</li>
+      <li><strong>CSS puro</strong> — todo el diseño usa CSS escrito a mano con un sistema de variables de diseño. Sin frameworks.</li>
+      <li><strong>JavaScript vanilla</strong> — una pequeña cantidad de JS en línea para el menú móvil y la barra de búsqueda.</li>
+      <li><strong>Cloudflare Pages</strong> — la plataforma de alojamiento. Se despliega automáticamente desde el repositorio de git.</li>
+    </ul>
+    <p>
+      No hay <strong>dependencias de terceros</strong> más allá de Astro y sus integraciones oficiales de MDX y
+      sitemap. Esto mantiene el sitio rápido y fácil de mantener.
+    </p>
+
+    <h2 id="structure">3. Estructura de archivos</h2>
+    <p>Estas son las ubicaciones de los archivos importantes:</p>
+    <pre><code>everydayfix/
+├─ astro.config.mjs           # Configuración de Astro (URL, MDX, sitemap)
+├─ package.json               # Scripts npm y dependencias
+├─ scripts/
+│  └─ generate-search-index.js   # Genera el índice de búsqueda desde el frontmatter
+├─ public/
+│  ├─ search-index.json       # Índice de búsqueda generado (se crea al hacer build)
+│  └─ favicon.svg / .ico      # Iconos del sitio
+└─ src/
+   ├─ content/
+   │  └─ articles/            # Todos los archivos MDX de artículos, organizados por categoría
+   │     ├─ home-living/
+   │     ├─ tech-internet/
+   │     ├─ kitchen-food/
+   │     └─ everyday-life/
+   ├─ components/             # Componentes reutilizables (tarjetas, buscador, migas de pan…)
+   ├─ data/
+   │  └─ categories.json      # Las cuatro categorías (slug, nombre, icono, descripción)
+   ├─ layouts/
+   │  └─ BaseLayout.astro     # Plantilla compartida: cabecera, menú, buscador, pie de página
+   ├─ pages/                  # Rutas (homepage, categoría, artículo, páginas estáticas)
+   │  ├─ index.astro              # Página principal
+   │  ├─ [category].astro         # Página de listado de categoría
+   │  ├─ [category]/[slug].astro  # Página individual de artículo
+   │  ├─ about.astro / contact.astro / disclaimer.astro / privacy-policy.astro
+   │  └─ docs.astro               # Esta página de documentación (versión web del PDF)
+   └─ styles/
+      ├─ global.css           # Reset, variables de diseño (colores, fuentes, espaciado), estilos base
+      └─ components.css       # Estilos de componentes (cabecera, tarjetas, buscador…)
+</code></pre>
+
+    <h2 id="add-article">4. Cómo añadir un artículo</h2>
+    <ol>
+      <li>Crear un archivo <code>.mdx</code> nuevo dentro de la carpeta de la categoría correspondiente, por ejemplo
+        <code>src/content/articles/tech-internet/mi-guia-nueva.mdx</code>.</li>
+      <li>El nombre del archivo se convierte en la URL (slug), así que usa minúsculas, guiones y un nombre descriptivo
+        (ej. <code>limpiar-sarten-quemado.mdx</code> → <code>/kitchen-food/limpiar-sarten-quemado/</code>).</li>
+      <li>Añadir el frontmatter obligatorio (ver plantilla abajo).</li>
+      <li>Escribir el cuerpo del artículo en Markdown.</li>
+      <li>Hacer build y verificar (ver <a href="#deploy">Build y despliegue</a>).</li>
+    </ol>
+
+    <p>Plantilla de frontmatter para artículos:</p>
+    <pre><code>---
+title: "Cómo hacer algo"
+description: "Un resumen de una o dos frases para los resultados de búsqueda y tarjetas."
+category: "tech-internet"           # el slug de la carpeta
+categoryName: "Tech &amp; Internet"  # el nombre que se muestra
+subcategory: "redes"                # etiqueta de agrupación opcional
+tags: ["etiqueta1", "etiqueta2"]    # se usa en la función de búsqueda
+date: "2026-09-09"                  # fecha de publicación (AAAA-MM-DD)
+updated: "2026-09-09"
+author: "EverydayFix Team"
+featured: false                     # true = aparece en "Featured Guides" de la homepage
+faqs:
+  - question: "¿Pregunta frecuente?"
+    answer: "Respuesta concisa y precisa."
+  # …hasta 5 entradas de FAQ
+steps:
+  - "Primer paso de la guía."
+  - "Segundo paso de la guía."
+---
+# Cómo hacer algo
+
+Párrafo introductorio…
+
+## Paso 1: …
+…contenido en markdown…
+## Guías relacionadas
+- [Enlace a un artículo relacionado](/tech-internet/guia-relacionada/)
+</code></pre>
+
+    <p><strong>Directrices de contenido:</strong> escribe consejos prácticos, precisos y con instrucciones paso a
+    paso. No inventes expertos, estudios ni credenciales. Enlaza a otros artículos del sitio cuando sea relevante.
+    Nunca recomiendes mezclar productos de limpieza potencialmente peligrosos.</p>
+
+    <h2 id="edit-article">5. Cómo editar un artículo</h2>
+    <p>
+      Abre el archivo <code>.mdx</code> del artículo en <code>src/content/articles/&lt;categoría&gt;/</code> y edita
+      el texto o el frontmatter directamente. Ediciones habituales:
+    </p>
+    <ul>
+      <li><strong>Corregir una errata</strong> — edita el cuerpo del Markdown.</li>
+      <li><strong>Actualizar el resumen que aparece en búsqueda</strong> — edita <code>description</code>.</li>
+      <li><strong>Cambiar la fecha de publicación</strong> — edita <code>date</code>.</li>
+      <li><strong>Destacar en la página principal</strong> — pon <code>featured: true</code>.</li>
+      <li><strong>Actualizar las FAQ o los pasos</strong> — edita los bloques <code>faqs</code> / <code>steps</code>.
+        Estos también alimentan los datos estructurados (ver SEO y datos estructurados).</li>
+    </ul>
+
+    <h2 id="add-category">6. Cómo añadir una categoría</h2>
+    <ol>
+      <li>Editar <code>src/data/categories.json</code> y añadir una entrada con un <code>slug</code>,
+        <code>name</code>, <code>icon</code> y <code>description</code> únicos.</li>
+      <li>Crear una carpeta coincidente en <code>src/content/articles/&lt;slug&gt;/</code> para sus artículos.</li>
+      <li>Añadir un enlace de navegación en <code>src/layouts/BaseLayout.astro</code> (el array
+        <code>navLinks</code> cerca del inicio) y en la sección "Categorías" del pie de página.</li>
+      <li>Añadir los tokens de color de la categoría en <code>src/styles/global.css</code> y los estilos de
+        tarjeta/etiqueta en <code>src/styles/components.css</code>.</li>
+    </ol>
+
+    <h2 id="styling">7. Estilos del sitio</h2>
+    <p>
+      Todas las decisiones de diseño están controladas por variables CSS (tokens de diseño) definidas en
+      <code>src/styles/global.css</code> dentro de <code>:root</code>. Cambia un valor una vez y se actualiza
+      en todo el sitio.
+    </p>
+    <ul>
+      <li><strong>Colores</strong> — <code>--color-primary</code>, <code>--color-text</code>,
+        <code>--color-bg</code>, y los tokens por categoría como <code>--color-tech-internet</code>.</li>
+      <li><strong>Tipografía</strong> — <code>--font-sans</code> (pila de fuentes del sistema) y tokens de tamaño como
+        <code>--text-base</code>, <code>--text-lg</code>, <code>--text-2xl</code>.</li>
+      <li><strong>Espaciado</strong> — <code>--space-1</code> hasta <code>--space-20</code>.</li>
+      <li><strong>Bordes y sombras</strong> — <code>--radius-*</code> y <code>--shadow-*</code>.</li>
+    </ul>
+    <p>
+      Los estilos específicos de componentes (cabecera, tarjetas, buscador, pie de página) están en
+      <code>src/styles/components.css</code>. Siempre reutiliza tokens existentes en lugar de codificar nuevos
+      colores o tamaños.
+    </p>
+
+    <h2 id="search">8. Función de búsqueda</h2>
+    <p>
+      El sitio tiene una barra de búsqueda del lado del cliente en la cabecera (y una más grande en la página
+      principal). Busca por títulos, descripciones, etiquetas y categorías de los artículos.
+    </p>
+    <ul>
+      <li><strong>Cómo funciona:</strong> durante el build, <code>scripts/generate-search-index.js</code> lee el
+        frontmatter de todos los artículos y escribe <code>public/search-index.json</code>. En tiempo de ejecución,
+        un script JS en <code>src/components/SearchBar.astro</code> descarga ese archivo y filtra los resultados
+        mientras escribes.</li>
+      <li><strong>No se envían resultados a ningún servidor</strong> — la búsqueda se realiza enteramente en el
+        navegador del visitante.</li>
+      <li><strong>La barra de búsqueda se oculta en las páginas legales</strong> (About, Contact, Disclaimer,
+        Privacy Policy) porque buscar artículos no tiene sentido ahí. Esas páginas pasan
+        <code>showSearch={false}</code> al layout.</li>
+      <li><strong>Añadir la barra a una página:</strong> se muestra automáticamente a menos que la página la
+        deshabilite.</li>
+    </ul>
+    <p>
+      Si añades un artículo, el índice de búsqueda se actualiza automáticamente en el siguiente build — sin paso
+      adicional.
+    </p>
+
+    <h2 id="seo">9. SEO y datos estructurados</h2>
+    <p>El sitio está optimizado para motores de búsqueda. Características principales:</p>
+    <ul>
+      <li><strong>Datos estructurados (JSON-LD)</strong> — los artículos generan los esquemas
+        <code>Article</code>, <code>HowTo</code> (desde el frontmatter <code>steps</code>), <code>FAQPage</code>
+        (desde el frontmatter <code>faqs</code>) y <code>BreadcrumbList</code>. La página principal emite un
+        esquema <code>WebSite</code>.</li>
+      <li><strong>Mapa del sitio</strong> — se genera automáticamente <code>sitemap-0.xml</code> con la integración
+        de sitemap y se envía a los motores de búsqueda a través de <code>robots.txt</code>.</li>
+      <li><strong>Meta etiquetas</strong> — cada página tiene <code>title</code>, <code>description</code>, URL
+        canónica, Open Graph y Twitter card.</li>
+    </ul>
+    <p>
+      Añadir un <code>description</code>, <code>faqs</code> y <code>steps</code> precisos en el frontmatter de cada
+      artículo mejora directamente su apariencia en los resultados de búsqueda.
+    </p>
+
+    <h2 id="deploy">10. Build y despliegue</h2>
+    <p>Ejecuta estos comandos desde la carpeta del proyecto:</p>
+    <pre><code># Instalar dependencias (solo la primera vez)
+npm install
+
+# Iniciar servidor local de desarrollo con recarga en vivo
+npm run dev
+
+# Construir el sitio de producción en la carpeta dist/
+# (esto también regenera el índice de búsqueda antes)
+npm run build
+
+# Previsualizar la build de producción localmente
+npm run preview
+</code></pre>
+    <p>
+      El script <code>build</code> ejecuta <code>npm run build:index</code> (regenerando el índice de búsqueda) y
+      luego <code>astro build</code>. El sitio final se escribe en <code>dist/</code>.
+    </p>
+    <p>
+      <strong>Despliegue:</strong> el sitio está alojado en Cloudflare Pages. Al enviar cambios al repositorio de
+      git conectado, se activa un build y despliegue automáticos — no hay paso de carga manual. Después de un push,
+      los cambios están en vivo en aproximadamente un minuto.
+    </p>
+
+    <h2 id="troubleshooting">11. Solución de problemas</h2>
+    <ul>
+      <li><strong>El build falla</strong> — lee el mensaje de error. Una causa habitual es un campo de frontmatter
+        ausente o mal formado en un artículo (cada artículo necesita <code>title</code>, <code>description</code>,
+        <code>category</code>, <code>categoryName</code>, <code>date</code>, <code>author</code> y
+        <code>tags</code>).</li>
+      <li><strong>Un artículo nuevo no aparece en búsqueda</strong> — el índice de búsqueda se genera durante el
+        build. Vuelve a ejecutar <code>npm run build</code>.</li>
+      <li><strong>Los resultados de búsqueda se ven incorrectos</strong> — la búsqueda coincide con títulos,
+        descripciones y etiquetas. Comprueba los campos <code>description</code> y <code>tags</code> del frontmatter
+        del artículo.</li>
+      <li><strong>Los cambios no están en vivo</strong> — confirma que el build tuvo éxito localmente y que los
+        cambios se enviaron al repositorio conectado a Cloudflare Pages.</li>
+      <li><strong>Falta una página</strong> — cada artículo debe estar en la carpeta de categoría correcta para que
+        su URL coincida. Mueve el archivo <code>.mdx</code> a la carpeta adecuada si es necesario.</li>
+    </ul>
+  </div>
+</BaseLayout>

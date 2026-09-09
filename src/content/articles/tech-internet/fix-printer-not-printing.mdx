@@ -1,0 +1,133 @@
+---
+title: "How to Fix a Printer That Won't Print"
+description: "Troubleshoot a printer that won't print with these proven fixes. Covers paper jams, offline status, driver issues, and wireless connectivity."
+category: "tech-internet"
+categoryName: "Tech & Internet"
+subcategory: "computer"
+tags: ["printer", "troubleshooting", "windows", "tech-support", "tech-tips"]
+date: "2026-09-09"
+updated: "2026-09-09"
+author: "EverydayFix Team"
+featured: false
+faqs:
+  - question: "Why is my printer offline when it is connected?"
+    answer: "A printer showing as 'offline' usually means the computer cannot communicate with it. Common causes are a network connection issue, the printer being set to 'Use Printer Offline' mode, a stuck print queue, or outdated drivers."
+  - question: "How do I clear a stuck print queue on Windows?"
+    answer: "Open Services (services.msc), find the 'Print Spooler' service, stop it, then delete all files in C:\\Windows\\System32\\spool\\PRINTERS. Start the Print Spooler service again and try printing."
+  - question: "Why is my printer printing blank pages?"
+    answer: "Blank pages are usually caused by empty ink or toner cartridges, dried-out printheads, or improperly installed cartridges. Run the printer's built-in printhead cleaning utility and check ink levels first."
+  - question: "How do I fix a paper jam?"
+    answer: "Turn off the printer, open all access panels, and gently pull out any stuck paper in the direction of the paper path. Check for small torn pieces. Close all panels, reload paper, and try printing again."
+  - question: "Why is my wireless printer not connecting?"
+    answer: "Ensure the printer is on the same WiFi network as your computer. Restart both the printer and the router. Some printers only work on 2.4GHz networks, not 5GHz — check your router settings."
+steps:
+  - "Check that the printer is turned on, connected to power, and not displaying any error messages."
+  - "Open the printer and check for paper jams — gently remove any stuck paper."
+  - "Make sure the printer has paper loaded correctly and ink or toner levels are sufficient."
+  - "Check the print queue on your computer — cancel all stuck pending jobs and try again."
+  - "Restart both the printer and the computer, then verify the printer is set as the default."
+  - "Reinstall or update the printer driver from the manufacturer's website if it still won't print."
+  - "For wireless printers, verify they're on the same WiFi network and restart the router if needed."
+---
+# How to Fix a Printer That Won't Print
+
+Printers have a reputation for failing at the worst possible moment — and it's well-earned. But most "printer broken" situations are actually simple connectivity or configuration issues you can fix in 10 minutes.
+
+Here's a systematic troubleshooting guide that works for both wired and wireless printers on Windows and Mac.
+
+## Step 1: Check the Basics
+
+Before diving into settings, verify the physical state:
+
+1. **Is the printer turned on?** Check for power lights or a display screen.
+2. **Is there paper loaded?** Open the paper tray and make sure it's properly seated.
+3. **Are there error messages?** Check the printer's display panel for blinking lights or error codes.
+4. **Are ink or toner levels sufficient?** Most printers show ink levels on the display or in the printer software.
+
+## Step 2: Check for Paper Jams
+
+Paper jams are the most visible printer problem.
+
+1. **Turn off the printer.**
+2. **Open all access panels** — the paper tray area, rear access door, and any side panels.
+3. **Gently pull out any stuck paper** in the direction the paper normally feeds (don't pull backward — it can tear).
+4. **Check for torn pieces** — even a small scrap left inside can cause future jams.
+5. **Close all panels**, reload paper, and try printing.
+
+## Step 3: Clear the Print Queue
+
+A stuck print job blocks all subsequent jobs.
+
+### Windows:
+1. Open **Settings → Printers & scanners.**
+2. Click your printer → **Open print queue.**
+3. **Cancel all pending jobs.**
+4. If jobs won't cancel: Open **Services** (type `services.msc` in the Run dialog), find **Print Spooler**, right-click → **Stop.**
+5. Open File Explorer to `C:\Windows\System32\spool\PRINTERS` and delete all files in that folder.
+6. Go back to Services and **Start** the Print Spooler.
+
+### Mac:
+1. Open **System Settings → Printers & Scanners.**
+2. Click your printer → **Open Print Queue.**
+3. Cancel all pending jobs.
+
+## Step 4: Restart Everything
+
+The classic fix that actually works:
+
+1. **Turn off the printer.**
+2. **Restart your computer.**
+3. **Turn the printer back on.**
+4. **Try printing again.**
+
+This clears temporary glitches in both the printer hardware and the computer's print subsystem.
+
+## Step 5: Set as Default Printer
+
+Sometimes the computer sends print jobs to a different (often virtual) printer.
+
+### Windows:
+1. **Settings → Printers & scanners.**
+2. Find your printer and click **Set as default.**
+3. Make sure **"Use Printer Offline"** is NOT checked.
+
+### Mac:
+1. **System Settings → Printers & Scanners.**
+2. Set your printer as the **Default printer.**
+
+## Step 6: Update or Reinstall Drivers
+
+If the printer is connected and powered on but still won't print:
+
+1. **Visit the printer manufacturer's website** (HP, Canon, Brother, Epson).
+2. **Download the latest driver** for your specific model and operating system.
+3. **Install the driver** and restart your computer.
+4. **Try printing again.**
+
+## Step 7: Fix Wireless Printer Connection
+
+For WiFi printers that show as connected but won't print:
+
+1. **Verify the printer is on the same WiFi network** as your computer. Many printers connect to a different network by accident.
+2. **Restart the router** — wait 30 seconds after turning it off before turning it back on.
+3. **Run the printer's WiFi setup** again from the printer's menu.
+4. **Check if your printer only supports 2.4GHz** — if your router broadcasts separate 2.4GHz and 5GHz networks, make sure the printer is on 2.4GHz.
+
+## Quick Diagnosis Table
+
+| Symptom | Likely Cause | Fix |
+|---------|-------------|-----|
+| Nothing happens when printing | Printer offline or not default | Set as default, check connection |
+| Error light blinking | Paper jam, empty ink, or open door | Check physical state |
+| Documents stuck in queue | Print Spooler issue | Restart Print Spooler |
+| Prints blank pages | Empty ink or dried printhead | Check ink, run cleaning cycle |
+| Wireless printer won't connect | Wrong network or IP issue | Reconnect to WiFi, restart router |
+
+## The Bottom Line
+
+Follow these steps in order: **check basics → clear jams → clear print queue → restart → set as default → update drivers.** This sequence solves 90% of printer problems. For wireless printers, also **verify the WiFi network** and **restart the router**.
+
+## Related Guides
+
+- [How to speed up a slow computer](/tech-internet/speed-up-slow-computer/) — a slow computer can cause print jobs to hang or time out.
+- [WiFi connected but no internet](/tech-internet/wifi-connected-no-internet/) — network connectivity issues affect wireless printers too.

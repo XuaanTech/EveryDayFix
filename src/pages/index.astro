@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import SearchBar from '../components/SearchBar.astro';
 import categories from '../data/categories.json';
 
 // Load all articles
@@ -51,6 +52,9 @@ const websiteSchema = {
       <p class="hero__subtitle">
         Practical tips, tricks, and step-by-step guides to fix common issues in your home, tech, kitchen, and daily life.
       </p>
+      <div class="hero__search">
+        <SearchBar variant="hero" />
+      </div>
       <div class="hero__categories">
         {categories.map(cat => (
           <a href={`/${cat.slug}/`} class="hero__cat-link">

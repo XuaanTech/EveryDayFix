@@ -42,6 +42,14 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
   day: 'numeric',
 });
 
+const formattedUpdated = updated ? new Date(updated).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}) : formattedDate;
+
+const reviewedDate = updated || date;
+
 const canonicalURL = `https://everydayfix.pages.dev/${category}/${slug}/`;
 
 // Find related articles (same category, different slug)
@@ -71,6 +79,10 @@ const articleSchema = {
   "author": {
     "@type": "Organization",
     "name": author || "EverydayFix Team",
+  },
+  "reviewedBy": {
+    "@type": "Organization",
+    "name": "EverydayFix Editorial Team",
   },
   "publisher": {
     "@type": "Organization",
@@ -115,8 +127,13 @@ const howToSchema = steps ? {
     <header class="article-header">
       <div class="article-header__meta">
         <span class={`badge badge--${category}`}>{categoryData.name}</span>
-        <time datetime={date}>{formattedDate}</time>
+        <span class="article-header__author">By {author || 'EverydayFix Team'}</span>
+        <time datetime={date}>Published {formattedDate}</time>
+        {updated && updated !== date && (
+          <time datetime={updated}>Updated {formattedUpdated}</time>
+        )}
       </div>
+      <p class="article-header__reviewed">Reviewed by the EverydayFix Editorial Team · Last reviewed {formattedUpdated}</p>
     </header>
 
     <article class="article-content">
