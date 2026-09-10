@@ -1,0 +1,219 @@
+---
+title: "Bluetooth Not Connecting? Fix It on Any Device"
+description: "Bluetooth headphones, speakers, keyboards, or mice won't connect? Here's the step-by-step fix for Windows, Mac, Android, and iOS."
+category: "tech-internet"
+categoryName: "Tech & Internet"
+subcategory: "troubleshooting"
+tags: ["bluetooth", "wireless", "connectivity", "troubleshooting", "headphones", "peripherals"]
+date: "2026-09-10"
+updated: "2026-09-10"
+author: "EverydayFix Team"
+featured: false
+faqs:
+  - question: "Why won't my Bluetooth headphones connect?"
+    answer: "Most common causes: the headphones are already connected to another device, they're not in pairing mode, Bluetooth is off on your device, or the headphones need a reset. Try forgetting the device and re-pairing."
+  - question: "How do I reset my Bluetooth headphones?"
+    answer: "Usually: turn them off, hold the power button for 10-15 seconds until the LED flashes rapidly (often red/blue or white). Check your specific model's manual — some use power + volume buttons."
+  - question: "Why does my Bluetooth keep disconnecting?"
+    answer: "Interference from WiFi (both use 2.4GHz), low battery, distance too far, or too many paired devices. Try forgetting unused devices, moving closer, or switching WiFi to 5GHz."
+  - question: "How do I fix Bluetooth on Windows?"
+    answer: "Run the Bluetooth troubleshooter (Settings > System > Troubleshoot > Other troubleshooters), restart the Bluetooth Support Service (services.msc), or reinstall the Bluetooth driver in Device Manager."
+  - question: "Why can't my phone find my Bluetooth device?"
+    answer: "The device isn't in pairing mode, it's already connected to something else, Bluetooth is off on your phone, or the device needs a reset. Make sure the device is in pairing mode (usually flashing LED) and within 3 feet."
+steps:
+  - "Turn Bluetooth off and on again on your device."
+  - "Put the Bluetooth device in pairing mode (flashing LED)."
+  - "Forget/unpair the device from your Bluetooth settings, then re-pair."
+  - "Restart both your device and the Bluetooth accessory."
+  - "Check for interference — move away from WiFi routers, microwaves, other Bluetooth devices."
+  - "Update Bluetooth drivers (Windows) or OS (phone/Mac)."
+---
+# Bluetooth Not Connecting? Fix It on Any Device
+
+Bluetooth is one of those technologies that works perfectly — until it doesn't. Your headphones won't pair, your mouse keeps disconnecting, or your phone just won't find your speaker. The good news: 90% of Bluetooth issues are fixed with the same few steps, regardless of device.
+
+## The Universal Fixes (Try These First)
+
+These work on **Windows, Mac, Android, iOS, Linux** — anything with Bluetooth.
+
+### 1. The "Turn It Off and On" Cycle
+It sounds basic, but it clears temporary glitches.
+
+1. **Turn Bluetooth OFF** on your phone/computer.
+2. **Turn the accessory OFF** (headphones, speaker, mouse).
+3. **Wait 15 seconds.**
+4. **Turn the accessory ON** and put it in **pairing mode**.
+5. **Turn Bluetooth ON** on your phone/computer.
+6. **Pair.**
+
+> **Why this works:** Both sides reset their Bluetooth radios and clear any stuck connection states.
+
+### 2. Forget and Re-Pair (Most Effective)
+If a device was previously paired, "forgetting" it forces a clean handshake.
+
+**On any device:**
+1. Go to **Bluetooth settings**.
+2. Find the problematic device in the list.
+3. Tap **"Forget," "Remove," or "Unpair."**
+4. Put the accessory in **pairing mode**.
+5. **Re-pair from scratch.**
+
+> **This fixes:** Corrupted pairing keys, outdated connection parameters, and "ghost" connections where the device thinks it's connected but it's not.
+
+### 3. Restart Both Devices
+A full restart clears deeper system-level issues.
+
+- **Phone/Computer:** Full restart (not just sleep/wake).
+- **Bluetooth accessory:** Turn off, wait 30 seconds, turn on.
+- **Then pair.**
+
+---
+
+## Device-Specific Fixes
+
+### Windows 10/11
+
+#### Run the Bluetooth Troubleshooter
+1. **Settings** → **System** → **Troubleshoot** → **Other troubleshooters**
+2. Click **Run** next to **Bluetooth**.
+3. Follow any prompts.
+
+#### Restart the Bluetooth Support Service
+1. Press **Win + R**, type `services.msc`, press Enter.
+2. Find **Bluetooth Support Service**.
+3. Right-click → **Restart**.
+4. Set **Startup type** to **Automatic**.
+
+#### Reinstall the Bluetooth Driver
+1. Right-click **Start** → **Device Manager**.
+2. Expand **Bluetooth**.
+3. Right-click your adapter (usually **Intel**, **Realtek**, or **Generic Bluetooth**) → **Uninstall device**.
+4. Check **Attempt to remove the driver** if prompted.
+5. **Restart your computer** — Windows will reinstall it automatically.
+
+#### Check Bluetooth Version Compatibility
+- **Bluetooth 5.0+** devices work best with Windows 10 1809+ and Windows 11.
+- Older adapters (Bluetooth 4.0) may struggle with newer headphones.
+
+### Mac (macOS)
+
+#### Reset the Bluetooth Module
+1. **Option + Shift + Click** the Bluetooth menu bar icon.
+2. Select **Reset the Bluetooth module**.
+3. Re-pair your devices.
+
+#### Delete Bluetooth Preference Files
+1. Open **Finder** → **Go** → **Go to Folder** (`Cmd+Shift+G`).
+2. Enter: `~/Library/Preferences/`
+3. Delete (or move to desktop):
+   - `com.apple.Bluetooth.plist`
+   - `com.apple.Bluetooth.plist.lockfile`
+3. **Restart your Mac.**
+
+#### Check for Interference
+- Macs are sensitive to 2.4GHz interference. If you have WiFi issues too, **switch WiFi to 5GHz** or move the Mac away from the router.
+
+### Android
+
+#### Clear Bluetooth Cache
+1. **Settings** → **Apps** → **See all apps**.
+2. Tap **three-dot menu** → **Show system apps**.
+3. Find **Bluetooth** → **Storage** → **Clear cache** and **Clear storage**.
+4. **Restart phone** and re-pair.
+
+#### Check App Permissions
+1. **Settings** → **Apps** → **Bluetooth** → **Permissions**.
+2. Ensure **Nearby devices** and **Location** are allowed.
+3. Android 12+ requires **Location** permission for Bluetooth scanning.
+
+### iOS / iPadOS
+
+#### Reset Network Settings (Nuclear Option)
+This clears ALL saved WiFi passwords and Bluetooth pairings.
+
+1. **Settings** → **General** → **Transfer or Reset iPhone** → **Reset**.
+2. **Reset Network Settings**.
+3. Enter passcode → confirm.
+4. **Re-pair everything.**
+
+#### Toggle Airplane Mode
+1. **Swipe down** for Control Center.
+2. Tap **Airplane Mode** → wait 10 seconds → tap again.
+3. This resets all radios including Bluetooth.
+
+---
+
+## Common Scenarios & Fixes
+
+### "My headphones connect but no sound"
+1. **Check output device:** Settings → Sound → Output → select headphones.
+2. **Check volume mixer:** Some apps have independent volume.
+3. **Disconnect other Bluetooth audio devices** — they may be stealing audio.
+
+### "My mouse/keyboard keeps disconnecting"
+1. **Replace batteries** — low battery is the #1 cause.
+2. **Move receiver closer** — USB extenders help for desktop PCs.
+3. **Unpair other unused Bluetooth devices** — too many connections cause instability.
+4. **Disable USB selective suspend** (Windows): Device Manager → USB Root Hub → Power Management → uncheck "Allow computer to turn off this device."
+
+### "My phone won't find the device at all"
+1. **Put the accessory in pairing mode** — this is the #1 mistake. Most devices need a specific button hold (power for 5-10 seconds, or power + volume).
+2. **Keep them 1 foot apart** during pairing.
+3. **Turn off other nearby Bluetooth devices** — they can interfere with discovery.
+
+### "Connected to two devices, won't switch"
+Many modern headphones support multipoint. If switching fails:
+1. **Pause audio on device A.**
+2. **Play audio on device B.**
+3. If that fails: **Turn off Bluetooth on device A**, then play on device B.
+4. Some headphones need the **app** (Sony, Bose, Sennheiser) to manage multipoint.
+
+---
+
+## Bluetooth Interference: The Silent Killer
+
+Bluetooth and WiFi **both use 2.4GHz**. They interfere with each other.
+
+| Source of Interference | Fix |
+|------------------------|-----|
+| WiFi router on 2.4GHz | Switch to 5GHz WiFi |
+| Microwave running | Don't use Bluetooth near running microwave |
+| Multiple Bluetooth devices | Unpair unused ones |
+| USB 3.0 devices | Move Bluetooth dongle away from USB 3.0 ports |
+| Wireless cameras/baby monitors | They use 2.4GHz — keep distance |
+
+> **Pro tip:** If you have a desktop PC, use a **USB Bluetooth adapter with an extension cable** to move the antenna away from the case and USB 3.0 ports. It makes a huge difference.
+
+---
+
+## When to Suspect Hardware Failure
+
+If you've tried everything above and it still fails:
+
+| Symptom | Likely Cause |
+|---------|--------------|
+| Works on other devices, not this one | Software/driver issue on this device |
+| Doesn't work on ANY device | Accessory is broken |
+| Works briefly then dies | Battery failing |
+| Pairs but immediately disconnects | Firmware issue on accessory |
+| Static/crackling audio | Antenna damage or interference |
+
+---
+
+## The Bottom Line
+
+**Forget and re-pair** fixes 70% of Bluetooth issues. **Restart both devices** fixes another 20%. The remaining 10% need driver updates, interference management, or hardware replacement. Start simple, work up.
+
+## Quick Reference Card
+
+| Device | Forget Device | Reset Radio | Clear Cache |
+|--------|---------------|-------------|-------------|
+| Windows | Settings → Devices | services.msc | N/A |
+| Mac | System Settings → Bluetooth | Option+Shift+Click menu | Delete plist files |
+| Android | Settings → Connected devices | N/A | Apps → Bluetooth → Storage |
+| iOS | Settings → Bluetooth → (i) | Reset Network Settings | N/A |
+
+## Related Guides
+
+- [WiFi connected but no internet](/tech-internet/wifi-connected-no-internet/) — another connectivity troubleshooting guide.
+- [How to speed up a slow computer](/tech-internet/speed-up-slow-computer/) — if Bluetooth issues are part of a sluggish system.

@@ -152,7 +152,7 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !page.includes('/404') && !page.includes('/search'),
+      filter: (page) => !page.includes('/404') && !page.includes('/search') && !page.includes('/docs'),
       serialize(item) {
         const pathname = new URL(item.url).pathname;
         const lastmod = lastmodMap.get(pathname);

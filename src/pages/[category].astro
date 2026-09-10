@@ -33,6 +33,29 @@ export async function getStaticPaths() {
 }
 
 const { category, articles } = Astro.props;
+
+// Schema.org CollectionPage — helps Google understand category pages as article collections
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": category.name,
+  "description": category.description,
+  "url": `https://everydayfix.pages.dev/${category.slug}/`,
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "EverydayFix",
+    "url": "https://everydayfix.pages.dev",
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": articles.length,
+    "itemListElement": articles.slice(0, 20).map((article, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": `https://everydayfix.pages.dev/${category.slug}/${article.slug}/`,
+    })),
+  },
+};
 ---
 
 <BaseLayout
@@ -40,6 +63,7 @@ const { category, articles } = Astro.props;
   description={category.description}
   canonicalURL={`https://everydayfix.pages.dev/${category.slug}/`}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
   <div class="container">
     <Breadcrumbs items={[
       { label: 'Home', href: '/' },
