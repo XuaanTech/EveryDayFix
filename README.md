@@ -70,3 +70,20 @@ full cookie consent panel (accept / reject / customise).
 - `search_select` — when a visitor opens an article from the search results.
 - A global `window.trackEvent(name, params)` helper (safe to call at any time;
   it only sends once consent is granted) for future custom events.
+
+**Legal / contractual steps (one-off, not code)**
+
+The code covers the technical GDPR/ePrivacy requirements. Three account-level
+steps must be completed on Cloudflare, Google and in production:
+
+1. **Cloudflare Data Processing Agreement** — accept the DPA for your account
+   (Cloudflare acts as a data processor for EU/UK visitor data). Available
+   under your Cloudflare account's legal/GDPR settings.
+2. **Google Analytics data processing terms** — accept the Google Ads Data
+   Processing Terms (with Standard Contractual Clauses) in your GA4 property
+   before relying on consent-based data from the EEA.
+3. **Production verification** — open the deployed site, DevTools → Network,
+   and confirm zero requests to `googletagmanager.com` / `google-analytics.com`
+   fire before consent is granted, and that the consent cookie appears after
+   choosing. Optionally have the setup reviewed by a qualified lawyer if you
+   serve the EU market commercially.
