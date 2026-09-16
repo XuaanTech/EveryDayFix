@@ -65,7 +65,14 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID || '';
     }
 
     function writeConsent(analytics) {
-      var value = encodeURIComponent(JSON.stringify({ v: 1, essential: true, analytics: !!analytics }));
+      // v:2 adds a timestamp so the consent record shows when the choice was
+      // made (epoch seconds) — record evidence a DPA might request.
+      var value = encodeURIComponent(JSON.stringify({
+        v: 2,
+        essential: true,
+        analytics: !!analytics,
+        ts: Math.floor(Date.now() / 1000),
+      }));
       var secure = location.protocol === 'https:' ? '; Secure' : '';
       document.cookie = CONSENT_COOKIE + '=' + value + '; path=/; max-age=' + COOKIE_MAX_AGE + '; SameSite=Lax' + secure;
     }
@@ -111,6 +118,11 @@ const GA4_ID = import.meta.env.PUBLIC_GA4_ID || '';
       gtag('config', MEASUREMENT_ID, {
         cookie_flags: flags,
         cookie_update: true,
+        // Hardening for a non-advertising site: disable Google signals and
+        // advertising personalisation so no cross-site/ad data ever flows.
+        // This matches what the privacy policy states (no ads / remarketing).
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
       });
       window.__gaReady = true;
     }

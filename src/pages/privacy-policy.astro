@@ -46,7 +46,64 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
       </li>
     </ul>
     <p>
-      Your choice is stored in a cookie (<code>everydayfix_cookie_consent</code>) for up to one year. You can change or withdraw your choice at any time through the "Cookie Settings" link in the footer. Withdrawing consent deletes the analytics cookies that were previously set and stops further tracking.
+      Your choice is stored in a cookie (<code>everydayfix_cookie_consent</code>) together with the date and time when you made it, and is kept for up to one year. You can change or withdraw your choice at any time through the "Cookie Settings" link in the footer. Withdrawing consent deletes the analytics cookies that were previously set and stops further tracking.
+    </p>
+
+    <p>The table below lists the cookies this website may use.</p>
+
+    <div class="cookie-table-wrap">
+      <table class="cookie-table">
+        <thead>
+          <tr>
+            <th scope="col">Cookie</th>
+            <th scope="col">Category</th>
+            <th scope="col">Purpose</th>
+            <th scope="col">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>everydayfix_cookie_consent</code></td>
+            <td>Strictly necessary</td>
+            <td>Stores your cookie choice (accept / reject / customise) and the date it was made.</td>
+            <td>1 year</td>
+          </tr>
+          <tr>
+            <td><code>_ga</code></td>
+            <td>Analytics</td>
+            <td>Distinguishes unique visitors (Google Analytics). Set only after you accept analytics.</td>
+            <td>2 years</td>
+          </tr>
+          <tr>
+            <td><code>_ga_&lt;container-id&gt;</code></td>
+            <td>Analytics</td>
+            <td>Persists the session state between pages (Google Analytics). Set only after you accept analytics.</td>
+            <td>2 years</td>
+          </tr>
+          <tr>
+            <td><code>_gid</code></td>
+            <td>Analytics</td>
+            <td>Distinguishes users to count visits (Google Analytics). Set only after you accept analytics.</td>
+            <td>24 hours</td>
+          </tr>
+          <tr>
+            <td><code>_gat</code></td>
+            <td>Analytics</td>
+            <td>Throttles the request rate to Google (Google Analytics). Set only after you accept analytics.</td>
+            <td>1 minute</td>
+          </tr>
+          <tr>
+            <td><code>__cf_bm</code>, <code>cf_clearance</code></td>
+            <td>Strictly necessary (conditional)</td>
+            <td>Cloudflare security cookies, listed for completeness. Set only if Cloudflare's bot-management or challenge features are enabled; they are not set during ordinary visits to this site.</td>
+            <td>Up to 30 days</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Analytics cookies follow the <code>_ga*</code> / <code>_gid</code> / <code>_gat</code> pattern and are only created after you grant consent. The consent cookie is the only strictly necessary cookie set by EverydayFix itself. Google may update cookie names or durations from time to time; the current details are described in <a href="https://developers.google.com/analytics/devguides/collection/gtagjs/cookie-usage" target="_blank" rel="noopener noreferrer">Google's cookie documentation</a>.
     </p>
 
     <h2>Legal Basis for Processing</h2>
@@ -125,4 +182,40 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
       If you have questions about this privacy policy, please see our <a href="/contact/">Contact</a> page.
     </p>
   </div>
+
+  <style>
+    .cookie-table-wrap {
+      overflow-x: auto;
+    }
+
+    .cookie-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    .cookie-table th,
+    .cookie-table td {
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .cookie-table thead th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+    }
+
+    .cookie-table code {
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 640px) {
+      .cookie-table {
+        min-width: 520px;
+      }
+    }
+  </style>
 </BaseLayout>
