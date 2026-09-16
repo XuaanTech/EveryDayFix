@@ -51,7 +51,8 @@ full cookie consent panel (accept / reject / customise).
   cookies (always on) and analytics cookies (opt-in). The "Cookie Settings"
   link in the footer reopens the panel at any time to review or withdraw the
   choice; withdrawing deletes the previously set GA cookies.
-- **Measurement ID via env var.** Set `PUBLIC_GA4_ID` (see `.env.example`).
+- **Measurement ID via env var.** Set `PUBLIC_GA4_ID` in a local `.env` file
+  (git-ignored) or as an environment variable on your Cloudflare Pages project.
   When it is unset, the consent layer still runs but no Google script loads.
 
 **Setup**
