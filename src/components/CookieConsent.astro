@@ -1,0 +1,468 @@
+---
+/**
+ * Cookie consent — banner + preferences panel.
+ *
+ * Legal requirements this covers (GDPR / ePrivacy):
+ *  - The visitor decides before any non-essential cookie is set: analytics
+ *    consent is opt-in and, together with <Analytics />, guarantees gtag.js
+ *    is not even loaded without consent.
+ *  - The choice can be withdrawn at any time via the "Cookie Settings" link
+ *    in the footer or the banner's "Cookie settings" button.
+ *  - Withdrawing deletes the analytics cookies that were previously set
+ *    (handled by the consent API in <Analytics />).
+ *
+ * The actual consent state lives in the `everydayfix_cookie_consent` cookie,
+ * read/written through window.EverydayFixConsent (defined in <Analytics />).
+ */
+---
+
+<div class="cookie-banner" data-consent-banner role="region" aria-label="Cookie consent" hidden>
+  <p class="cookie-banner__text">
+    We use cookies to keep EverydayFix working and to understand how readers use the site, so we can make it better.
+    Essential cookies are always active. Analytics cookies are only set if you accept them.
+    You can change your choice at any time.
+    <a href="/privacy-policy/">Read our Privacy Policy</a>.
+  </p>
+  <div class="cookie-banner__actions">
+    <button type="button" class="cookie-btn cookie-btn--ghost" data-consent-customize>Cookie settings</button>
+    <button type="button" class="cookie-btn cookie-btn--secondary" data-consent-reject>Reject all</button>
+    <button type="button" class="cookie-btn cookie-btn--primary" data-consent-accept>Accept all</button>
+  </div>
+</div>
+
+<dialog class="cookie-dialog" data-consent-dialog aria-labelledby="cookie-dialog-title" aria-describedby="cookie-dialog-desc">
+  <button type="button" class="cookie-dialog__close" data-consent-dialog-close aria-label="Close cookie preferences">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M18 6 6 18M6 6l12 12" />
+    </svg>
+  </button>
+
+  <div class="cookie-dialog__header">
+    <h2 id="cookie-dialog-title">Cookie preferences</h2>
+    <p id="cookie-dialog-desc">
+      When you visit EverydayFix we may store cookies to keep the site working and, if you allow it, to measure how it is used.
+      Your choice is stored for one year and you can change it at any time.
+    </p>
+  </div>
+
+  <div class="cookie-opt-list">
+    <div class="cookie-opt">
+      <div class="cookie-opt__body">
+        <h3 class="cookie-opt__title">Strictly necessary</h3>
+        <p class="cookie-opt__desc">
+          Required for the site to work correctly — for example, remembering your cookie choice.
+          These cannot be turned off.
+        </p>
+      </div>
+      <div class="cookie-opt__control">
+        <label class="cookie-switch" aria-label="Strictly necessary cookies, always active">
+          <input class="cookie-switch__input" type="checkbox" data-consent-essential checked disabled />
+          <span class="cookie-switch__track" aria-hidden="true"></span>
+        </label>
+        <span class="cookie-opt__badge">Always active</span>
+      </div>
+    </div>
+
+    <div class="cookie-opt">
+      <div class="cookie-opt__body">
+        <h3 class="cookie-opt__title">Analytics &amp; statistics</h3>
+        <p class="cookie-opt__desc">
+          Helps us understand how visitors use the site (pages visited, how long they stay) so we can improve content.
+          Uses Google Analytics. Opt-in — nothing is set or loaded until you allow it.
+        </p>
+      </div>
+      <div class="cookie-opt__control">
+        <label class="cookie-switch" aria-label="Analytics cookies">
+          <input class="cookie-switch__input" type="checkbox" data-consent-analytics />
+          <span class="cookie-switch__track" aria-hidden="true"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="cookie-dialog__footer">
+    <div class="cookie-dialog__footer-quick">
+      <button type="button" class="cookie-btn cookie-btn--ghost" data-consent-dialog-reject>Reject all</button>
+      <button type="button" class="cookie-btn cookie-btn--ghost" data-consent-dialog-accept>Accept all</button>
+    </div>
+    <button type="button" class="cookie-btn cookie-btn--primary" data-consent-dialog-save>Save preferences</button>
+  </div>
+</dialog>
+
+<style>
+  /* --- Banner --- */
+  .cookie-banner {
+    position: fixed;
+    left: 50%;
+    bottom: var(--space-4);
+    transform: translateX(-50%);
+    width: min(calc(100% - 2 * var(--space-4)), 700px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    animation: cookie-banner-in var(--transition-base);
+  }
+
+  .cookie-banner[hidden] {
+    display: none;
+  }
+
+  @keyframes cookie-banner-in {
+    from {
+      opacity: 0;
+      transform: translate(-50%, 14px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  .cookie-banner__text {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    line-height: var(--leading-relaxed);
+  }
+
+  .cookie-banner__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  /* --- Buttons --- */
+  .cookie-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .cookie-btn--primary {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+  .cookie-btn--primary:hover {
+    background: var(--color-primary-hover);
+  }
+
+  .cookie-btn--secondary {
+    background: transparent;
+    color: var(--color-text);
+    border-color: var(--color-border);
+  }
+  .cookie-btn--secondary:hover {
+    background: var(--color-bg-alt);
+  }
+
+  .cookie-btn--ghost {
+    background: transparent;
+    color: var(--color-primary);
+    border-color: transparent;
+  }
+  .cookie-btn--ghost:hover {
+    text-decoration: underline;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .cookie-btn--primary {
+      color: #0f172a;
+    }
+  }
+
+  /* --- Dialog --- */
+  .cookie-dialog {
+    width: min(calc(100% - 2 * var(--space-4)), 540px);
+    max-height: 90vh;
+    padding: 0;
+    overflow: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-card);
+    color: var(--color-text);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cookie-dialog::backdrop {
+    background: color-mix(in srgb, var(--color-text) 45%, transparent);
+  }
+
+  .cookie-dialog__header {
+    padding: var(--space-6) var(--space-6) var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cookie-dialog__header h2 {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 700;
+  }
+
+  .cookie-dialog__header p {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+  }
+
+  .cookie-dialog__close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+  }
+  .cookie-dialog__close:hover {
+    color: var(--color-text);
+    background: var(--color-bg-alt);
+  }
+
+  /* --- Preference rows --- */
+  .cookie-opt-list {
+    padding: var(--space-3) var(--space-6);
+  }
+
+  .cookie-opt {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-5) 0;
+  }
+  .cookie-opt + .cookie-opt {
+    border-top: 1px solid var(--color-border-light);
+  }
+
+  .cookie-opt__title {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-base);
+    font-weight: 600;
+  }
+
+  .cookie-opt__desc {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: var(--leading-normal);
+  }
+
+  .cookie-opt__control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-2);
+    flex-shrink: 0;
+  }
+
+  .cookie-opt__badge {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--color-success-strong);
+    background: var(--color-success-light);
+    border: 1px solid var(--color-success-border);
+    border-radius: 999px;
+    padding: 2px var(--space-2);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .cookie-opt__badge {
+      color: var(--color-success);
+      background: var(--color-success-light);
+      border-color: var(--color-success-border);
+    }
+  }
+
+  /* --- Switch --- */
+  .cookie-switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    cursor: pointer;
+  }
+
+  .cookie-switch__input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .cookie-switch__track {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: var(--color-border);
+    transition: background-color var(--transition-base);
+  }
+
+  .cookie-switch__track::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition-base);
+  }
+
+  .cookie-switch__input:checked + .cookie-switch__track {
+    background: var(--color-primary);
+  }
+
+  .cookie-switch__input:checked + .cookie-switch__track::after {
+    transform: translateX(18px);
+  }
+
+  .cookie-switch__input:focus-visible + .cookie-switch__track {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Disabled (strictly necessary): keep a recognisable but muted state */
+  .cookie-switch__input:disabled + .cookie-switch__track {
+    background: var(--color-border);
+    cursor: default;
+  }
+  .cookie-switch__input:disabled + .cookie-switch__track::after {
+    background: var(--color-text-muted);
+  }
+
+  /* --- Dialog footer --- */
+  .cookie-dialog__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    padding: var(--space-4) var(--space-6) var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .cookie-dialog__footer-quick {
+    display: flex;
+    gap: var(--space-2);
+  }
+
+  /* --- Motion preferences --- */
+  @media (prefers-reduced-motion: reduce) {
+    .cookie-banner {
+      animation: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var api = window.EverydayFixConsent;
+    if (!api) return;
+
+    var banner = document.querySelector('[data-consent-banner]');
+    var dialog = document.querySelector('[data-consent-dialog]');
+    var analyticsInput = dialog && dialog.querySelector('[data-consent-analytics]');
+
+    function openDialog() {
+      if (!dialog || !api) return;
+      if (analyticsInput) analyticsInput.checked = !!(api.get() && api.get().analytics);
+      document.documentElement.classList.add('cookie-modal-open');
+      // Dialog.showModal() traps focus and disables the rest of the page.
+      if (typeof dialog.showModal === 'function') {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute('open', '');
+      }
+    }
+
+    function closeDialog() {
+      if (!dialog) return;
+      document.documentElement.classList.remove('cookie-modal-open');
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+    }
+
+    function choose(analytics) {
+      if (!api) return;
+      api.set({ analytics: analytics });
+      if (banner) banner.hidden = true;
+      closeDialog();
+    }
+
+    function openPanel() {
+      openDialog();
+    }
+
+    // Show the banner only when no decision has been stored yet.
+    if (banner && api && !api.hasChoice()) {
+      banner.hidden = false;
+    }
+
+    // Banner buttons
+    banner && banner.addEventListener('click', function (e) {
+      if (e.target.closest('[data-consent-accept]')) choose(true);
+      else if (e.target.closest('[data-consent-reject]')) choose(false);
+      else if (e.target.closest('[data-consent-customize]')) openPanel();
+    });
+
+    // Dialog buttons
+    dialog && dialog.addEventListener('click', function (e) {
+      if (e.target.closest('[data-consent-dialog-save]')) {
+        choose(analyticsInput ? analyticsInput.checked : false);
+      } else if (e.target.closest('[data-consent-dialog-accept]')) {
+        choose(true);
+      } else if (e.target.closest('[data-consent-dialog-reject]')) {
+        choose(false);
+      } else if (e.target.closest('[data-consent-dialog-close]')) {
+        closeDialog();
+      } else if (e.target === dialog) {
+        // Click on the backdrop closes the panel.
+        closeDialog();
+      }
+    });
+
+    // Esc is handled natively by <dialog>.
+    dialog && dialog.addEventListener('cancel', closeDialog);
+    dialog && dialog.addEventListener('close', function () {
+      document.documentElement.classList.remove('cookie-modal-open');
+    });
+
+    // "Cookie Settings" links anywhere in the page (e.g. the footer) reopen
+    // the panel so consent can always be reviewed or withdrawn.
+    document.addEventListener('click', function (e) {
+      if (e.target.closest('[data-consent-open]')) {
+        e.preventDefault();
+        openPanel();
+      }
+    });
+
+    // Restore the open state if somehow left behind by a fallback browser.
+    document.documentElement.classList.remove('cookie-modal-open');
+  })();
+</script>

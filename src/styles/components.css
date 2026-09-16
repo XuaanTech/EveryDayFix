@@ -175,6 +175,21 @@
   color: var(--color-text-muted);
 }
 
+/* "Cookie Settings" is a button styled like the footer text links. */
+.footer__link--button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Keep the page from scrolling behind the open cookie preferences panel. */
+html.cookie-modal-open {
+  overflow: hidden;
+}
+
 /* --- Hero Section --- */
 .hero {
   padding: var(--space-20) 0 var(--space-16);

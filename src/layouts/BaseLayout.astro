@@ -1,6 +1,8 @@
 ---
 import SearchBar from '../components/SearchBar.astro';
 import Logo from '../components/Logo.astro';
+import Analytics from '../components/Analytics.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 
 interface Props {
   title: string;
@@ -125,6 +127,9 @@ const organizationSchema = {
 
   <!-- Site-wide structured data -->
   <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+
+  <!-- Google Analytics 4 (consent-gated, see component docs) -->
+  <Analytics />
 </head>
 <body>
   <header class="header">
@@ -196,6 +201,9 @@ const organizationSchema = {
             <a href="/about/" class="footer__link">About Us</a>
             <a href="/contact/" class="footer__link">Contact</a>
             <a href="/docs/" class="footer__link">Documentation</a>
+            <button type="button" class="footer__link footer__link--button" data-consent-open>
+              Cookie Settings
+            </button>
             <a href="/privacy-policy/" class="footer__link">Privacy Policy</a>
             <a href="/disclaimer/" class="footer__link">Disclaimer</a>
             <a href="/rss.xml" class="footer__link">RSS Feed</a>
@@ -217,5 +225,8 @@ const organizationSchema = {
       toggle.setAttribute('aria-expanded', String(isOpen));
     });
   </script>
+
+  <!-- Cookie consent banner + preferences panel -->
+  <CookieConsent />
 </body>
 </html>

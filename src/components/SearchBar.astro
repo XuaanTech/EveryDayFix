@@ -158,7 +158,16 @@ const inputPlaceholder = placeholder ?? 'Search articles…';
 
     list.addEventListener('mousedown', (e) => e.preventDefault());
     list.addEventListener('click', (e) => {
-      if (e.target.closest('.search-bar__result')) close();
+      const result = e.target.closest('.search-bar__result');
+      if (result) {
+        // Analytics: let GA know what term produced a click-through.
+        if (typeof window.trackEvent === 'function') {
+          window.trackEvent('search_select', {
+            search_term: input.value.trim(),
+          });
+        }
+        close();
+      }
     });
 
     document.addEventListener('click', (e) => {
