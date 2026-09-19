@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { SITE_NAME, SITE_URL } from '../lib/site.js';
 
 function escapeXml(str) {
   return String(str)
@@ -54,7 +55,7 @@ export function GET() {
       const fm = parseFrontmatter(raw);
       const rel = file.slice(articlesDir.length + 1).replace(/\.mdx$/, '');
       const [category, slug] = rel.split(/[\\/]/);
-      const url = `https://everydayfix.pages.dev/${category}/${slug}/`;
+      const url = `${SITE_URL}/${category}/${slug}/`;
       return { ...fm, url, category, slug };
     })
     .sort((a, b) => (b.date || '').localeCompare(a.date || ''))
@@ -71,12 +72,12 @@ export function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>EverydayFix</title>
-    <link>https://everydayfix.pages.dev</link>
+    <title>${SITE_NAME}</title>
+    <link>${SITE_URL}</link>
     <description>Simple solutions for everyday problems. Practical tips, tricks, and step-by-step guides.</description>
     <language>en-us</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
-    <atom:link href="https://everydayfix.pages.dev/rss.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
 ${items}
   </channel>
 </rss>`;

@@ -38,7 +38,7 @@ All commands are run from the root of the project, from a terminal:
 
 ## 📊 Analytics & Cookie Consent
 
-The site includes a GDPR/ePrivacy-safe Google Analytics 4 integration with a
+The site includes a consent-gated Google Analytics 4 integration with a
 full cookie consent panel (accept / reject / customise).
 
 **How it works**
@@ -73,8 +73,8 @@ full cookie consent panel (accept / reject / customise).
 
 **Legal / contractual steps (one-off, not code)**
 
-The code covers the technical GDPR/ePrivacy requirements. Three account-level
-steps must be completed on Cloudflare, Google and in production:
+The code is designed to gate non-essential analytics behind consent. Three account-level
+steps should still be completed on Cloudflare, Google and in production:
 
 1. **Cloudflare Data Processing Agreement** — accept the DPA for your account
    (Cloudflare acts as a data processor for EU/UK visitor data). Available

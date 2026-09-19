@@ -8,7 +8,11 @@ interface Props {
   items: BreadcrumbItem[];
 }
 
+import { SITE_URL } from '../lib/site.js';
+
 const { items } = Astro.props;
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? SITE_URL;
 
 // Schema.org BreadcrumbList JSON-LD
 const breadcrumbSchema = {
@@ -18,7 +22,7 @@ const breadcrumbSchema = {
     "@type": "ListItem",
     "position": index + 1,
     "name": item.label,
-    ...(item.href ? { "item": `https://everydayfix.pages.dev${item.href}` } : {}),
+    ...(item.href ? { "item": `${siteUrl}${item.href}` } : {}),
   })),
 };
 ---

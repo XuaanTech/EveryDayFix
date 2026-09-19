@@ -69,8 +69,9 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 ├─ astro.config.mjs           # Configuración de Astro (URL, MDX, sitemap, índice de búsqueda)
 ├─ package.json               # Scripts npm y dependencias
 ├─ public/
-│  ├─ search-index.json       # Índice de búsqueda generado (se crea al hacer build)
-│  └─ favicon.svg / .ico      # Iconos del sitio
+│  ├─ logo.png                # Logo cuadrado usado por el marcado de Organization
+│  ├─ favicon.svg / .ico      # Iconos del sitio
+│  └─ og-default.png          # Imagen Open Graph por defecto
 └─ src/
    ├─ content/
    │  └─ articles/            # Todos los archivos MDX de artículos, organizados por categoría
@@ -88,7 +89,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
    │  ├─ [category].astro         # Página de listado de categoría
    │  ├─ [category]/[slug].astro  # Página individual de artículo
    │  ├─ about.astro / contact.astro / disclaimer.astro / privacy-policy.astro
-   │  └─ docs.astro               # Esta página de documentación (versión web del PDF)
+   │  └─ docs.astro               # Esta página de documentación
    └─ styles/
       ├─ global.css           # Reset, variables de diseño (colores, fuentes, espaciado), estilos base
       └─ components.css       # Estilos de componentes (cabecera, tarjetas, buscador…)
@@ -132,7 +133,7 @@ Párrafo introductorio…
 ## Paso 1: …
 …contenido en markdown…
 ## Guías relacionadas
-- [Enlace a un artículo relacionado](/tech-internet/guia-relacionada/)
+- [How to Improve WiFi Speed](/tech-internet/improve-wifi-speed/)
 </code></pre>
 
     <p><strong>Directrices de contenido:</strong> escribe consejos prácticos, precisos y con instrucciones paso a
@@ -186,8 +187,7 @@ Párrafo introductorio…
 
     <h2 id="search">8. Función de búsqueda</h2>
     <p>
-      El sitio tiene una barra de búsqueda del lado del cliente en la cabecera. Busca por títulos,
-      descripciones, etiquetas y categorías de los artículos.
+      El sitio tiene una barra de búsqueda del lado del cliente en la cabecera. Busca por títulos, descripciones, etiquetas, categorías y texto del contenido de los artículos.
     </p>
     <ul>
       <li><strong>Cómo funciona:</strong> durante el build, una integración definida en
@@ -219,8 +219,9 @@ Párrafo introductorio…
         las páginas.</li>
       <li><strong>Feed RSS</strong> — <code>/rss.xml</code> genera automáticamente un feed RSS 2.0 con todos los
         artículos, útil para agregadores, lectores RSS y la descubribilidad por crawlers de IA.</li>
-      <li><strong>Mapa del sitio</strong> — se genera automáticamente <code>sitemap-index.xml</code> con la integración
-        de sitemap y se envía a los motores de búsqueda a través de <code>robots.txt</code>.</li>
+      <li><strong>Mapa del sitio</strong> — se genera automáticamente <code>sitemap-index.xml</code> (con uno o más
+        archivos <code>sitemap-*.xml</code>) mediante la integración de sitemap y se anuncia desde
+        <code>/robots.txt</code>.</li>
       <li><strong>Meta etiquetas</strong> — cada página tiene <code>title</code>, <code>description</code>, URL
         canónica, Open Graph y Twitter card, más <code>max-image-preview:large</code> para habilitar imágenes
         grandes en resultados de búsqueda.</li>
@@ -228,12 +229,13 @@ Párrafo introductorio…
         precargar páginas al pasar el ratón por encima, mejorando la velocidad de navegación entre páginas.</li>
     </ul>
     <p>
-      Añadir un <code>description</code>, <code>faqs</code> y <code>steps</code> precisos en el frontmatter de cada
-      artículo mejora directamente su apariencia en los resultados de búsqueda.
+      Añadir un <code>description</code>, <code>faqs</code> y <code>steps</code> precisos ayuda a los buscadores a entender
+      y clasificar mejor el contenido, pero no garantiza un formato concreto en los resultados.
     </p>
 
     <h2 id="deploy">10. Build y despliegue</h2>
     <p>Ejecuta estos comandos desde la carpeta del proyecto:</p>
+    <p><strong>Requisito:</strong> Node.js 22.19.0 o superior.</p>
     <pre><code># Instalar dependencias (solo la primera vez)
 npm install
 
@@ -266,9 +268,8 @@ npm run preview
         <code>tags</code>).</li>
       <li><strong>Un artículo nuevo no aparece en búsqueda</strong> — el índice de búsqueda se genera durante el
         build. Vuelve a ejecutar <code>npm run build</code>.</li>
-      <li><strong>Los resultados de búsqueda se ven incorrectos</strong> — la búsqueda coincide con títulos,
-        descripciones y etiquetas. Comprueba los campos <code>description</code> y <code>tags</code> del frontmatter
-        del artículo.</li>
+      <li><strong>Los resultados de búsqueda se ven incorrectos</strong> — la búsqueda combina coincidencias de título y texto indexado. Comprueba
+        el título, la descripción, las etiquetas y el contenido del artículo.</li>
       <li><strong>Los cambios no están en vivo</strong> — confirma que el build tuvo éxito localmente y que los
         cambios se enviaron al repositorio conectado a Cloudflare Pages.</li>
       <li><strong>Falta una página</strong> — cada artículo debe estar en la carpeta de categoría correcta para que

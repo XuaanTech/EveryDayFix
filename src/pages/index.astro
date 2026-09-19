@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import categories from '../data/categories.json';
 import { categoryFromPath, readingTimeFromFile } from '../lib/utils.js';
+import { SITE_NAME, SITE_URL } from '../lib/site.js';
 
 // Load all articles
 const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
@@ -30,15 +31,15 @@ const latestArticles = articles.slice(0, 9);
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "EverydayFix",
-  "url": "https://everydayfix.pages.dev",
+  "name": SITE_NAME,
+  "url": SITE_URL,
   "description": "Simple solutions for everyday problems. Practical tips, tricks, and guides.",
   "inLanguage": "en",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://everydayfix.pages.dev/search?q={search_term_string}",
+      "urlTemplate": `${SITE_URL}/search?q={search_term_string}`,
     },
     "query-input": "required name=search_term_string",
   },

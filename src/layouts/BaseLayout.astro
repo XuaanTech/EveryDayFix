@@ -3,6 +3,7 @@ import SearchBar from '../components/SearchBar.astro';
 import Logo from '../components/Logo.astro';
 import Analytics from '../components/Analytics.astro';
 import CookieConsent from '../components/CookieConsent.astro';
+import { SITE_NAME, SITE_URL } from '../lib/site.js';
 
 interface Props {
   title: string;
@@ -18,11 +19,14 @@ interface Props {
   articleSection?: string;
 }
 
+const defaultCanonicalURL = new URL(Astro.url.pathname, SITE_URL).href;
+const defaultOgImage = new URL('/og-default.png', SITE_URL).href;
+
 const {
   title,
   description,
-  canonicalURL = Astro.url.href,
-  ogImage = 'https://everydayfix.pages.dev/og-default.png',
+  canonicalURL = defaultCanonicalURL,
+  ogImage = defaultOgImage,
   ogType = 'website',
   showSearch = true,
   noindex = false,
@@ -32,8 +36,8 @@ const {
   articleSection,
 } = Astro.props;
 
-const siteName = 'EverydayFix';
-const siteUrl = 'https://everydayfix.pages.dev';
+const siteName = SITE_NAME;
+const siteUrl = SITE_URL;
 const fullTitle = title === siteName ? title : `${title} | ${siteName}`;
 
 // Determine active nav path
@@ -57,9 +61,9 @@ const organizationSchema = {
   "description": "Simple solutions for everyday problems. Practical tips, tricks, and step-by-step guides for home, tech, kitchen, and daily life.",
   "logo": {
     "@type": "ImageObject",
-    "url": `${siteUrl}/og-default.png`,
-    "width": 1200,
-    "height": 630,
+    "url": `${siteUrl}/logo.png`,
+    "width": 180,
+    "height": 180,
   },
   "contactPoint": {
     "@type": "ContactPoint",
@@ -79,6 +83,7 @@ const organizationSchema = {
   <meta name="description" content={description} />
   <meta name="robots" content={`${noindex ? 'noindex, nofollow' : 'index, follow'}, max-image-preview:large, max-snippet:-1, max-video-preview:-1`} />
   <link rel="canonical" href={canonicalURL} />
+  <link rel="sitemap" href={new URL('sitemap-index.xml', siteUrl).href} />
   <link rel="alternate" hreflang="en" href={canonicalURL} />
   <link rel="alternate" hreflang="x-default" href={canonicalURL} />
   <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)" />
@@ -117,7 +122,7 @@ const organizationSchema = {
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="alternate" type="application/rss+xml" title="EverydayFix RSS" href="https://everydayfix.pages.dev/rss.xml" />
+  <link rel="alternate" type="application/rss+xml" title="EverydayFix RSS" href={new URL('rss.xml', siteUrl).href} />
 
   <!-- Rendering-friendly CSS (Astro bundles these at build time) -->
   <style is:global>
@@ -139,7 +144,7 @@ const organizationSchema = {
         <span>EverydayFix</span>
       </a>
 
-      <button class="header__menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav" id="menu-toggle">
+      <button class="header__menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="main-nav" id="menu-toggle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 12h18M3 6h18M3 18h18" />
         </svg>
@@ -220,9 +225,23 @@ const organizationSchema = {
   <script>
     const toggle = document.getElementById('menu-toggle');
     const nav = document.getElementById('main-nav');
+
+    function closeMenu() {
+      if (!toggle || !nav) return;
+      nav.classList.remove('header__nav--open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+    }
+
     toggle?.addEventListener('click', () => {
       const isOpen = nav?.classList.toggle('header__nav--open') ?? false;
       toggle.setAttribute('aria-expanded', String(isOpen));
+      toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+    });
+
+    nav?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeMenu();
     });
   </script>
 

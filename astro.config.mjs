@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import { SITE_URL } from './src/lib/site.js';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const ARTICLES_DIR = join(ROOT, 'src', 'content', 'articles');
@@ -68,6 +69,19 @@ function parseFrontmatter(raw) {
  * every dev start and every build, so the index is always in sync — no
  * separate script step to remember.
  */
+function stripMarkdown(raw) {
+  return raw
+    .replace(/^---[\s\S]*?\n---\s*/m, ' ')
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/^\s{0,3}#{1,6}\s+/gm, ' ')
+    .replace(/[`*_~>#>-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function writeSearchIndex(outDir) {
   const files = collectMdx(ARTICLES_DIR);
   const index = [];
@@ -75,21 +89,23 @@ function writeSearchIndex(outDir) {
   for (const file of files) {
     const raw = readFileSync(file, 'utf8');
     const fm = parseFrontmatter(raw);
+    const articleText = stripMarkdown(raw);
 
     // Slug comes from the file path relative to the articles dir.
     const rel = file.slice(ARTICLES_DIR.length + 1).replace(/\.mdx$/, '');
     const [category, slug] = rel.split(/[\\/]/);
 
     const title = fm.title || slug;
+    const tags = Array.isArray(fm.tags) ? fm.tags : [];
     index.push({
       title,
       description: fm.description || '',
       category,
       categoryName: fm.categoryName || '',
-      tags: Array.isArray(fm.tags) ? fm.tags : [],
+      tags,
       date: fm.date || '',
       url: `/${category}/${slug}/`,
-      text: `${title} ${fm.description || ''} ${(Array.isArray(fm.tags) ? fm.tags : []).join(' ')} ${fm.categoryName || ''}`.toLowerCase(),
+      text: `${title} ${fm.description || ''} ${tags.join(' ')} ${fm.categoryName || ''} ${articleText}`.toLowerCase(),
     });
   }
 
@@ -146,7 +162,7 @@ function buildLastmodMap() {
 const lastmodMap = buildLastmodMap();
 
 export default defineConfig({
-  site: 'https://everydayfix.pages.dev',
+  site: SITE_URL,
   trailingSlash: 'always',
   prefetch: true,
   integrations: [

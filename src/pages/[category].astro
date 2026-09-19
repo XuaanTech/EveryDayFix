@@ -4,6 +4,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import categories from '../data/categories.json';
 import { categoryFromPath, readingTimeFromFile } from '../lib/utils.js';
+import { SITE_NAME, SITE_URL } from '../lib/site.js';
 
 export async function getStaticPaths() {
   const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
@@ -40,11 +41,11 @@ const collectionSchema = {
   "@type": "CollectionPage",
   "name": category.name,
   "description": category.description,
-  "url": `https://everydayfix.pages.dev/${category.slug}/`,
+  "url": `${SITE_URL}/${category.slug}/`,
   "isPartOf": {
     "@type": "WebSite",
-    "name": "EverydayFix",
-    "url": "https://everydayfix.pages.dev",
+    "name": SITE_NAME,
+    "url": SITE_URL,
   },
   "mainEntity": {
     "@type": "ItemList",
@@ -52,7 +53,7 @@ const collectionSchema = {
     "itemListElement": articles.slice(0, 20).map((article, index) => ({
       "@type": "ListItem",
       "position": index + 1,
-      "url": `https://everydayfix.pages.dev/${category.slug}/${article.slug}/`,
+      "url": `${SITE_URL}/${category.slug}/${article.slug}/`,
     })),
   },
 };
@@ -61,7 +62,7 @@ const collectionSchema = {
 <BaseLayout
   title={category.name}
   description={category.description}
-  canonicalURL={`https://everydayfix.pages.dev/${category.slug}/`}
+  canonicalURL={`${SITE_URL}/${category.slug}/`}
 >
   <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
   <div class="container">

@@ -6,6 +6,7 @@ import RelatedArticles from '../../components/RelatedArticles.astro';
 import ArticleDisclaimer from '../../components/ArticleDisclaimer.astro';
 import categories from '../../data/categories.json';
 import { readingTimeFromFile, categoryFromPath } from '../../lib/utils.js';
+import { SITE_NAME, SITE_URL } from '../../lib/site.js';
 
 export async function getStaticPaths() {
   const articleModules = import.meta.glob('../../content/articles/**/*.mdx', { eager: true });
@@ -35,8 +36,9 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { title, description, category, categoryData, slug, date, updated, author, faqs, steps, tags, Content, filePath } = Astro.props;
-const siteUrl = 'https://everydayfix.pages.dev';
+const { title, description, category, categoryData, slug, date, updated, author, faqs, steps, tags, image, Content, filePath } = Astro.props;
+const siteUrl = SITE_URL;
+const articleImageURL = image ? new URL(image, siteUrl).href : new URL('/og-default.png', siteUrl).href;
 const canonicalURL = `${siteUrl}/${category}/${slug}/`;
 
 const formattedDate = new Date(date).toLocaleDateString('en-US', {
@@ -115,13 +117,14 @@ const articleSchema = {
   "publisher": {
     "@type": "Organization",
     "@id": `${siteUrl}/#organization`,
-    "name": "EverydayFix",
+    "name": SITE_NAME,
     "url": siteUrl,
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": canonicalURL,
   },
+  "image": [articleImageURL],
   "inLanguage": "en",
 };
 
@@ -149,6 +152,7 @@ const howToSchema = steps ? {
   articleModifiedTime={updated || date}
   articleAuthor={author || 'EverydayFix Team'}
   articleSection={categoryData.name}
+  ogImage={articleImageURL}
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
   {howToSchema && <script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />}
