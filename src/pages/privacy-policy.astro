@@ -1,0 +1,223 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="EverydayFix privacy policy. Learn how we handle your data and protect your privacy."
+  showSearch={false}
+>
+  <div class="static-page">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: 'Privacy Policy' },
+    ]} />
+
+    <h1>Privacy Policy</h1>
+
+    <p><em>Last updated: September 2026</em></p>
+
+    <p>
+      This privacy policy explains how EverydayFix handles information when you visit our website.
+    </p>
+
+    <h2>What We Collect</h2>
+    <p>
+      EverydayFix is a static content website. There are no user accounts, contact forms, or newsletter signups on the site.
+      If you choose to contact us by email, we receive the information you include in that message and use it to respond to your enquiry or feedback.
+    </p>
+    <p>
+      If you consent to analytics cookies (see below), we use Google Analytics to understand how visitors use the site — for example which pages are read and how long visitors stay. This information is used in aggregate to improve our content. You can accept, reject, or customise analytics tracking at any time using the cookie banner or the "Cookie Settings" link in the footer.
+    </p>
+    <p>
+      In addition, our hosting provider (Cloudflare) automatically collects standard web server logs such as IP addresses, browser type, request times, and referring URLs as part of their hosting infrastructure. This data is processed by Cloudflare for the purpose of delivering and securing our website and does not require your consent.
+    </p>
+
+    <h2>Cookies</h2>
+    <p>
+      A cookie is a small text file stored on your device. EverydayFix uses two categories of cookies:
+    </p>
+    <ul>
+      <li>
+        <strong>Strictly necessary cookies</strong> — required for the site to work correctly, for example to remember your cookie preferences. These are always active and do not require consent.
+      </li>
+      <li>
+        <strong>Analytics cookies</strong> — set by Google Analytics only when you grant consent. They help us measure how the site is used. They are strictly opt-in: nothing is loaded or stored until you accept them.
+      </li>
+    </ul>
+    <p>
+      Your choice is stored in a cookie (<code>everydayfix_cookie_consent</code>) together with the date and time when you made it, and is kept for up to one year. You can change or withdraw your choice at any time through the "Cookie Settings" link in the footer. Withdrawing consent deletes the analytics cookies that were previously set and stops further tracking.
+    </p>
+
+    <p>The table below lists the cookies this website may use.</p>
+
+    <div class="cookie-table-wrap">
+      <table class="cookie-table">
+        <thead>
+          <tr>
+            <th scope="col">Cookie</th>
+            <th scope="col">Category</th>
+            <th scope="col">Purpose</th>
+            <th scope="col">Duration</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>everydayfix_cookie_consent</code></td>
+            <td>Strictly necessary</td>
+            <td>Stores your cookie choice (accept / reject / customise) and the date it was made.</td>
+            <td>1 year</td>
+          </tr>
+          <tr>
+            <td><code>_ga</code></td>
+            <td>Analytics</td>
+            <td>Distinguishes unique visitors (Google Analytics). Set only after you accept analytics.</td>
+            <td>2 years</td>
+          </tr>
+          <tr>
+            <td><code>_ga_&lt;container-id&gt;</code></td>
+            <td>Analytics</td>
+            <td>Persists the session state between pages (Google Analytics). Set only after you accept analytics.</td>
+            <td>2 years</td>
+          </tr>
+          <tr>
+            <td><code>_gid</code></td>
+            <td>Analytics</td>
+            <td>Distinguishes users to count visits (Google Analytics). Set only after you accept analytics.</td>
+            <td>24 hours</td>
+          </tr>
+          <tr>
+            <td><code>_gat</code></td>
+            <td>Analytics</td>
+            <td>Throttles the request rate to Google (Google Analytics). Set only after you accept analytics.</td>
+            <td>1 minute</td>
+          </tr>
+          <tr>
+            <td><code>__cf_bm</code>, <code>cf_clearance</code></td>
+            <td>Strictly necessary (conditional)</td>
+            <td>Cloudflare security cookies, listed for completeness. Set only if Cloudflare's bot-management or challenge features are enabled; they are not set during ordinary visits to this site.</td>
+            <td>Up to 30 days</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Analytics cookies follow the <code>_ga*</code> / <code>_gid</code> / <code>_gat</code> pattern and are only created after you grant consent. The consent cookie is the only strictly necessary cookie set by EverydayFix itself. Google may update cookie names or durations from time to time; the current details are described in <a href="https://developers.google.com/analytics/devguides/collection/gtagjs/cookie-usage" target="_blank" rel="noopener noreferrer">Google's cookie documentation</a>.
+    </p>
+
+    <h2>Legal Basis for Processing</h2>
+    <p>
+      We process server logs on the basis of our legitimate interest in providing and securing this website. Where analytics cookies are used, we process that data on the basis of your consent (Article 6(1)(a) GDPR), which you give through the cookie banner and may withdraw at any time.
+    </p>
+
+    <h2>Data Retention</h2>
+    <p>
+      Your cookie preference is retained on your device for up to one year. Analytics data collected by Google Analytics is retained according to <a href="https://support.google.com/analytics/answer/7667196" target="_blank" rel="noopener noreferrer">Google's data retention settings</a> (by default 14 months). Server logs collected by Cloudflare are retained according to <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's data retention policy</a>.
+    </p>
+
+    <h2>Third-Party Services</h2>
+    <p>
+      Our website is hosted on Cloudflare Pages. Cloudflare may collect standard web server logs (IP addresses, browser information, request times) as part of their hosting infrastructure. Please refer to <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare's Privacy Policy</a> for details on how they handle this data.
+    </p>
+    <p>
+      With your consent, we use <strong>Google Analytics</strong> for audience measurement. Google processes this data in accordance with the <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">Google Analytics Terms of Service</a> and <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google's Privacy Policy</a>. We do not use advertising networks, remarketing, or social media plugins, and analytics is the only non-essential third-party service on this website.
+    </p>
+
+    <h2>International Data Transfers</h2>
+    <p>
+      Our website is hosted in the United States through Cloudflare's global network. If you access this website from the European Economic Area (EEA) or other regions with data transfer laws, please be aware that your information may be transferred to, stored, and processed in the United States or other countries where Cloudflare operates data centers. Cloudflare uses Standard Contractual Clauses and other appropriate safeguards for international data transfers.
+    </p>
+    <p>
+      Where you have consented to analytics, Google Analytics may also transfer data to Google's servers, including in the United States. Google relies on Standard Contractual Clauses and other appropriate safeguards under the GDPR for these transfers. You can stop this processing at any time by withdrawing consent via the "Cookie Settings" link in the footer.
+    </p>
+
+    <h2>Your Rights</h2>
+    <p>
+      Under applicable data protection laws (including the GDPR for European users and the CCPA/CPRA for California residents), you may have the following rights regarding your personal data:
+    </p>
+    <ul>
+      <li><strong>Right of Access</strong> — Request information about what personal data is processed about you.</li>
+      <li><strong>Right to Rectification</strong> — Request correction of inaccurate personal data.</li>
+      <li><strong>Right to Erasure</strong> — Request deletion of your personal data.</li>
+      <li><strong>Right to Data Portability</strong> — Request a copy of your personal data in a structured format.</li>
+      <li><strong>Right to Object</strong> — Object to the processing of your personal data.</li>
+      <li><strong>Right to Withdraw Consent</strong> — Where processing is based on consent, withdraw it at any time.</li>
+    </ul>
+    <p>
+      To exercise any of these rights, or if you have questions about how your data is processed, please contact us. To withdraw your cookie consent at any time, use the "Cookie Settings" link in the footer.
+      Information sent directly to us by email can be handled through the same contact address.
+    </p>
+
+    <h2>California Residents (CCPA/CPRA)</h2>
+    <p>
+      If you are a California resident, you have the right to:
+    </p>
+    <ul>
+      <li>Know what personal information is being collected about you.</li>
+      <li>Request deletion of your personal information.</li>
+      <li>Opt out of the sale of your personal information (we do not sell personal information).</li>
+      <li>Not be discriminated against for exercising your privacy rights.</li>
+    </ul>
+    <p>
+      We do not sell, share, or use personal information for cross-context behavioral advertising.
+    </p>
+
+    <h2>Content</h2>
+    <p>
+      All content on EverydayFix is created for informational purposes. While we strive for accuracy, we cannot guarantee that all information is always complete or current. Always use your own judgment when applying any tips or solutions from our articles. See our <a href="/disclaimer/">Disclaimer</a> for more details.
+    </p>
+
+    <h2>Children's Privacy</h2>
+    <p>
+      This website is not directed at children under the age of 13 (or applicable age in your jurisdiction). We do not knowingly collect personal information from children.
+    </p>
+
+    <h2>Changes to This Policy</h2>
+    <p>
+      We may update this privacy policy if we add services such as analytics or advertising. Any changes will be posted on this page with an updated date.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      If you have questions about this privacy policy, please see our <a href="/contact/">Contact</a> page.
+    </p>
+  </div>
+
+  <style>
+    .cookie-table-wrap {
+      overflow-x: auto;
+    }
+
+    .cookie-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    .cookie-table th,
+    .cookie-table td {
+      padding: var(--space-2) var(--space-3);
+      border: 1px solid var(--color-border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .cookie-table thead th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+    }
+
+    .cookie-table code {
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 640px) {
+      .cookie-table {
+        min-width: 520px;
+      }
+    }
+  </style>
+</BaseLayout>

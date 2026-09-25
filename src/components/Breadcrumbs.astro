@@ -1,0 +1,44 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+import { SITE_URL } from '../lib/site.js';
+
+const { items } = Astro.props;
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? SITE_URL;
+
+// Schema.org BreadcrumbList JSON-LD
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": items.map((item, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": item.label,
+    ...(item.href ? { "item": `${siteUrl}${item.href}` } : {}),
+  })),
+};
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {items.map((item, index) => (
+      <li style="display:flex;align-items:center;gap:0.5rem;">
+        {index > 0 && <span class="breadcrumbs__separator" aria-hidden="true">/</span>}
+        {item.href ? (
+          <a href={item.href}>{item.label}</a>
+        ) : (
+          <span aria-current="page">{item.label}</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

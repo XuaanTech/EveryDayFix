@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /search
+Disallow: /docs
+
+Sitemap: https://solvya.pages.dev/sitemap.xml

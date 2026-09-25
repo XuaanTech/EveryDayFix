@@ -1,0 +1,194 @@
+---
+/**
+ * Google Analytics 4 — GDPR/ePrivacy-ready integration.
+ *
+ * Works in two stages:
+ *
+ *  1. Consent preamble (inline, always present, makes no network request).
+ *     It registers Google Consent Mode v2 with every storage type denied
+ *     (strict opt-in default) and exposes a tiny consent API on
+ *     `window.EveryDayFixConsent` used by <CookieConsent />.
+ *
+ *  2. gtag.js itself, which is ONLY injected once the visitor has granted
+ *     analytics consent. Until then no request leaves the browser for
+ *     Google, and Consent Mode keeps all stored data denied if/once gtag
+ *     loads. This is the strictest legally-safe posture (GDPR / ePrivacy).
+ *
+ * To activate GA4 you must set the PUBLIC_GA4_ID environment variable with
+ * your web-stream Measurement ID (something like G-XXXXXXXXXX). If it is
+ * unset the preamble still manages consent, but no Google script is ever loaded.
+ */
+
+const GA4_ID = import.meta.env.PUBLIC_GA4_ID || '';
+---
+
+<!-- Measurement ID is passed via meta and read in the script: Astro does not
+     interpolate {expressions} inside <script is:inline>, so this keeps the
+     preamble pure static JS while the ID stays configurable per environment. -->
+<meta name="ga4-measurement-id" content={GA4_ID} />
+
+<script is:inline>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+
+  // Consent Mode v2: everything denied until the visitor chooses. "wait_for_update"
+  // lets a queued update win even if gtag.js initialises fractions later.
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500,
+  });
+
+  // Recommended Consent Mode v2 hardening defaults (no impact without ads).
+  gtag('set', 'ads_data_redaction', true);
+  gtag('set', 'url_passthrough', true);
+
+  (function () {
+    var CONSENT_COOKIE = 'everydayfix_cookie_consent';
+    var COOKIE_MAX_AGE = 60 * 60 * 24 * 365; // 1 year
+    var meta = document.querySelector('meta[name="ga4-measurement-id"]');
+    var MEASUREMENT_ID = (meta && meta.getAttribute('content')) || '';
+
+    function readConsent() {
+      try {
+        var m = document.cookie.match(new RegExp('(?:^|;\\s*)' + CONSENT_COOKIE + '=([^;]*)'));
+        if (!m) return null;
+        var parsed = JSON.parse(decodeURIComponent(m[1]));
+        return parsed && typeof parsed === 'object' ? parsed : null;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    function writeConsent(analytics) {
+      // v:2 adds a timestamp so the consent record shows when the choice was
+      // made (epoch seconds) — record evidence a DPA might request.
+      var value = encodeURIComponent(JSON.stringify({
+        v: 2,
+        essential: true,
+        analytics: !!analytics,
+        ts: Math.floor(Date.now() / 1000),
+      }));
+      var secure = location.protocol === 'https:' ? '; Secure' : '';
+      document.cookie = CONSENT_COOKIE + '=' + value + '; path=/; max-age=' + COOKIE_MAX_AGE + '; SameSite=Lax' + secure;
+    }
+
+    function applyConsent(consent) {
+      var analytics = !!(consent && consent.analytics);
+      gtag('consent', 'update', {
+        analytics_storage: analytics ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500,
+      });
+    }
+
+    // Remove Google Analytics cookies when consent is withdrawn, so no
+    // previously stored identifiers survive the visitor's decision.
+    function deleteGaCookies() {
+      document.cookie.split(';').forEach(function (raw) {
+        var name = (raw.split('=')[0] || '').trim();
+        if (!/^(_ga|_gid|_gat|_gac_)/i.test(name)) return;
+        var flags = 'path=/; max-age=0; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+        document.cookie = name + '=; ' + flags;
+        document.cookie = name + '=; ' + flags + '; domain=' + location.hostname;
+      });
+    }
+
+    var gtagLoaded = false;
+    function loadGtag() {
+      if (gtagLoaded || !MEASUREMENT_ID) return;
+      gtagLoaded = true;
+
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(MEASUREMENT_ID);
+      document.head.appendChild(s);
+
+      gtag('js', new Date());
+      // SameSite/Secure flags hardening on the cookies GA creates (Secure only
+      // over HTTPS, so local development over http keeps working).
+      var flags = location.protocol === 'https:' ? 'SameSite=Lax;Secure' : 'SameSite=Lax';
+      gtag('config', MEASUREMENT_ID, {
+        cookie_flags: flags,
+        cookie_update: true,
+        // Hardening for a non-advertising site: disable Google signals and
+        // advertising personalisation so no cross-site/ad data ever flows.
+        // This matches what the privacy policy states (no ads / remarketing).
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false,
+      });
+      window.__gaReady = true;
+    }
+
+    // Public consent API consumed by <CookieConsent />.
+    window.EveryDayFixConsent = {
+      hasChoice: function () { return readConsent() !== null; },
+      get: function () { return readConsent() || { essential: true, analytics: false }; },
+      set: function (prefs) {
+        var analytics = !!(prefs && prefs.analytics);
+        writeConsent(analytics);
+        applyConsent({ analytics: analytics });
+        if (analytics) loadGtag();
+        else deleteGaCookies();
+      },
+    };
+
+    // Restore a stored decision before anything else initialises.
+    var stored = readConsent();
+    if (stored) {
+      applyConsent(stored);
+      if (stored.analytics) loadGtag();
+    }
+
+    // Generic event helper for other components (e.g. SearchBar) — safe to call
+    // at any time, it only pushes to GA once analytics is enabled.
+    window.trackEvent = function (eventName, params) {
+      if (!window.__gaReady) return;
+      gtag('event', eventName, params || {});
+    };
+
+    // Track clicks to external sites, email and phone links (only runs once
+    // analytics consent has been granted, because __gaReady gates it).
+    document.addEventListener('click', function (e) {
+      if (!window.__gaReady) return;
+      var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+      if (!link) return;
+
+      var href = link.getAttribute('href') || '';
+      var type = '';
+      var domain = '';
+
+      if (/^mailto:/i.test(href)) {
+        type = 'mail';
+      } else if (/^tel:/i.test(href)) {
+        type = 'tel';
+      } else if (/^https?:/i.test(href)) {
+        try {
+          var u = new URL(href, location.href);
+          if (u.hostname !== location.hostname) {
+            type = 'outbound';
+            domain = u.hostname;
+          }
+        } catch (err) {
+          /* ignore malformed urls */
+        }
+      }
+
+      if (type) {
+        gtag('event', 'outbound_click', {
+          link_type: type,
+          link_url: href,
+          link_domain: domain || undefined,
+        });
+      }
+    });
+  })();
+</script>

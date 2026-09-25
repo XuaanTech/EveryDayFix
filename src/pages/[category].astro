@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import categories from '../data/categories.json';
+import { categoryFromPath, readingTimeFromFile } from '../lib/utils.js';
+import { SITE_NAME, SITE_URL } from '../lib/site.js';
+
+export async function getStaticPaths() {
+  const articleModules = import.meta.glob('../content/articles/**/*.mdx', { eager: true });
+
+  return categories.map((cat) => {
+    const catArticles = Object.entries(articleModules)
+      .filter(([path]) => categoryFromPath(path) === cat.slug)
+      .map(([path, mod]) => {
+        const slug = path.split('/').pop()?.replace('.mdx', '') || '';
+        return {
+          ...mod.frontmatter,
+          slug,
+          category: cat.slug,
+          readingTime: readingTimeFromFile(mod.file),
+        };
+      })
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    return {
+      params: { category: cat.slug },
+      props: {
+        category: cat,
+        articles: catArticles,
+      },
+    };
+  });
+}
+
+const { category, articles } = Astro.props;
+
+// Schema.org CollectionPage — helps Google understand category pages as article collections
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": category.name,
+  "description": category.description,
+  "url": `${SITE_URL}/${category.slug}/`,
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": SITE_NAME,
+    "url": SITE_URL,
+  },
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": articles.length,
+    "itemListElement": articles.slice(0, 20).map((article, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": `${SITE_URL}/${category.slug}/${article.slug}/`,
+    })),
+  },
+};
+---
+
+<BaseLayout
+  title={category.name}
+  description={category.description}
+  canonicalURL={`${SITE_URL}/${category.slug}/`}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)} />
+  <div class="container">
+    <Breadcrumbs items={[
+      { label: 'Home', href: '/' },
+      { label: category.name },
+    ]} />
+
+    <div class="category-header">
+      <div class="category-header__icon">{category.icon}</div>
+      <h1 class="category-header__title">{category.name}</h1>
+      <p class="category-header__desc">{category.description}</p>
+    </div>
+
+    <div class="article-grid">
+      {articles.map((article) => (
+        <ArticleCard
+          title={article.title}
+          description={article.description}
+          category={article.category}
+          categoryName={category.name}
+          slug={article.slug}
+          date={article.date}
+          readingTime={article.readingTime}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

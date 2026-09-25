@@ -1,0 +1,47 @@
+---
+interface Props {
+  category?: string;
+}
+
+const { category } = Astro.props;
+
+const disclaimers: Record<string, string> = {
+  'home-living': 'This article is for informational purposes only. DIY repairs involve risks including personal injury and property damage. Always use appropriate safety equipment and consider consulting a licensed professional for plumbing, electrical, or structural work.',
+  'tech-internet': 'This article is for informational purposes only. While we aim to provide accurate guidance, tech troubleshooting may vary by device and software version. Always back up your data before making system changes.',
+  'kitchen-food': 'This article is for informational purposes only. Food safety information is general guidance — always follow advice from your local food safety authority. Cooking and cleaning involve risks; use appropriate safety precautions.',
+  'everyday-life': 'This article is for informational purposes only. Always use your own judgment and follow product safety instructions when applying the tips and solutions described.',
+};
+
+const defaultDisclaimer = 'This article is for informational purposes only. Always use your own judgment and follow appropriate safety guidelines when applying the solutions described.';
+
+const text = (category && disclaimers[category]) || defaultDisclaimer;
+---
+
+<div class="article-disclaimer" role="note">
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+    <path d="M8 4.5v4M8 11h.007" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <p>{text}</p>
+</div>
+
+<style>
+  .article-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-alt);
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    line-height: 1.5;
+  }
+
+  .article-disclaimer p {
+    margin: 0;
+    font-size: 0.8125rem;
+  }
+</style>

@@ -1,0 +1,30 @@
+[
+  {
+    "slug": "home-living",
+    "name": "Home & Living",
+    "description": "Cleaning tips, organization hacks, repairs, and home improvement solutions.",
+    "icon": "🏠",
+    "color": "home-living"
+  },
+  {
+    "slug": "tech-internet",
+    "name": "Tech & Internet",
+    "description": "Fix computer problems, WiFi issues, smartphone tips, and everyday tech solutions.",
+    "icon": "💻",
+    "color": "tech-internet"
+  },
+  {
+    "slug": "kitchen-food",
+    "name": "Kitchen & Food",
+    "description": "Cooking tips, food safety, kitchen cleaning tricks, and ingredient guides.",
+    "icon": "🍳",
+    "color": "kitchen-food"
+  },
+  {
+    "slug": "everyday-life",
+    "name": "Everyday Life",
+    "description": "Practical solutions for daily problems, cleaning hacks, and useful life tips.",
+    "icon": "✨",
+    "color": "everyday-life"
+  }
+]
