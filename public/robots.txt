@@ -3,4 +3,4 @@ Allow: /
 Disallow: /search
 Disallow: /docs
 
-Sitemap: https://solvya.pages.dev/sitemap.xml
+Sitemap: https://everydayfix.pages.dev/sitemap-0.xml
